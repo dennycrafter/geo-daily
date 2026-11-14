@@ -6,6 +6,7 @@ import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { notify, slackPost, saveState } from "./slack.mjs";
+import { syncMembers } from "./members.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data", "scores.json");
@@ -15,6 +16,14 @@ const COOKIE = (process.env.GEO_NCFA || "").trim();
 if (!COOKIE) {
   console.error("Missing GEO_NCFA (your GeoGuessr _ncfa cookie). Nothing fetched.");
   process.exit(1);
+}
+
+async function send(method, path) {
+  const res = await fetch(BASE + path, {
+    method,
+    headers: { cookie: `_ncfa=${COOKIE}`, accept: "application/json", "content-type": "application/json", "user-agent": "Mozilla/5.0 (geo-daily friends dashboard)" },
+  });
+  return { status: res.status };
 }
 
 async function get(path) {
@@ -119,11 +128,20 @@ async function main() {
 
   const after = JSON.stringify({ d: data.days, p: data.players });
 
-  // Slack (runs every time, so the 5pm results post goes out even with no new scores)
+  // New people who joined on the site: make them friends and save their names
   const hook = (process.env.SLACK_WEBHOOK_URL || "").trim();
+  let memberEvents = [];
+  try {
+    let cfg = {}; try { cfg = JSON.parse(await readFile(join(ROOT, "data", "config.json"), "utf8")); } catch {}
+    const r = await syncMembers({ get, send, siteUrl: process.env.GEO_SITE_URL || cfg.siteUrl });
+    memberEvents = r.events;
+    for (const e of memberEvents) console.log(`Member ${e.type}: ${e.name}`);
+  } catch (e) { console.error("Member sync failed: " + (e.message || e)); }
+
+  // Slack (runs every time, so the 5pm results post goes out even with no new scores)
   if (hook) {
     try {
-      const { msgs, state } = await notify({ before: beforeData, after: data, post: (t) => slackPost(hook, t) });
+      const { msgs, state } = await notify({ before: beforeData, after: data, memberEvents, post: (t) => slackPost(hook, t) });
       await saveState(state);
       console.log(`Slack: ${msgs.length} message(s) sent`);
     } catch (e) { console.error("Slack failed: " + (e.message || e)); }

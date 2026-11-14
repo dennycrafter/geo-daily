@@ -24,10 +24,24 @@ const routes = {
   "/api/v3/results/highscores/D12": { items: [mkPlayer("b2", "driplessbeing", [3000, 3000, 3000, 3000, 3000])] },
 };
 
+// friend features: aaaa... already a friend, bbbb... sent Denis a request, cccc... is brand new
+const A = "a".repeat(24), B = "b".repeat(24), C = "c".repeat(24);
+const calls = [];
+routes["/api/v3/social/friends/summary"] = { friends: [{ userId: A, nick: "already_friend" }] };
+routes["/api/v3/social/friends/received"] = [{ userId: B, nick: "sent_me_one" }];
+routes[`/api/v3/users/${A}`] = { nick: "already_friend" };
+routes[`/api/v3/users/${B}`] = { nick: "sent_me_one" };
+routes[`/api/v3/users/${C}`] = { nick: "brand_new" };
+routes["/api/join"] = [{ id: A, name: "Andy", at: "2026-11-14T00:00:00Z" }, { id: B, name: "Bea", at: "2026-11-14T00:00:00Z" }, { id: C, name: "Cal", at: "2026-11-14T00:00:00Z" }];
+routes["/__calls"] = calls;
+
 http.createServer((req, res) => {
+  if (req.method !== "GET") calls.push(req.method + " " + req.url);
+  if (req.url.startsWith("/api/join") || req.url.startsWith("/__calls")) { res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify(routes[req.url.split("?")[0]])); }
   if (!String(req.headers.cookie || "").includes("_ncfa=good")) { res.writeHead(401); return res.end(); }
   const path = req.url.split("?")[0];
   if (path === "/api/v3/results/highscores/TODAY") { res.writeHead(404); return res.end('{"message":"User hasn\'t played challenge yet."}'); }
+  if (req.method !== "GET" && path.startsWith("/api/v3/social/friends/")) { res.writeHead(200); return res.end(); }
   const body = routes[path];
   if (!body) { res.writeHead(404); return res.end(); }
   res.writeHead(200, { "content-type": "application/json" });

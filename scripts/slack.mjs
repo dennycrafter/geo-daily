@@ -29,17 +29,24 @@ const QUIPS = [
 ];
 function quip(score, seed) { const tier = QUIPS.find(([min]) => score >= min)[1]; let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return tier[h % tier.length]; }
 
-export async function notify({ before, after, now = new Date(), post }) {
+export async function notify({ before, after, now = new Date(), post, memberEvents = [] }) {
   const cfg = await read("data/config.json", {});
   const names = await read("data/names.json", {});
+  const members = await read("data/members.json", {});
   const state = await read("data/slack-state.json", { pinged: {}, recapped: [] });
   const sc = cfg.slack || {};
   const site = cfg.siteUrl || "";
-  const nameOf = (id, nick) => names[nick || after.players?.[id]?.nick] || nick || after.players?.[id]?.nick || "?";
+  const nameOf = (id, nick) => members[id]?.name || names[nick || after.players?.[id]?.nick] || nick || after.players?.[id]?.nick || "?";
   const days = Object.keys(after.days || {}).sort().reverse();
   const latest = days[0];
   const msgs = [];
-  if (!latest) return { msgs, state };
+  const owner = cfg.ownerName || "Denis";
+  for (const e of memberEvents) {
+    const tag = e.nick && e.nick !== e.name ? ` (${e.nick} on GeoGuessr)` : "";
+    if (e.type === "joined") msgs.push(`👋 *${e.name}*${tag} just joined Geo Daily! Their scores will show up here after their first daily. 🌍`);
+    if (e.type === "requested") msgs.push(`👋 *${e.name}*${tag} signed up for Geo Daily. ${owner} sent them a GeoGuessr friend request, accept it to start showing up. 📨`);
+  }
+  if (!latest) { for (const text of msgs) await post(text); return { msgs, state }; }
 
   // 1. a "GEO ALERT" for each person who newly finished the latest day
   const ageDays = (now - new Date(latest + "T12:00:00Z")) / 864e5;

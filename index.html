@@ -42,11 +42,11 @@ button { font: inherit; color: inherit; }
 /* top bar */
 .top { position: sticky; top: 0; z-index: 20; background: rgba(244,243,238,.82); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
 .top .wrap { display: flex; align-items: center; gap: 16px; height: 58px; }
-.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; letter-spacing: -.01em; white-space: nowrap; }
 .logo svg { width: 26px; height: 26px; }
 .top .spacer { flex: 1; }
 .updated { color: var(--muted); font-size: 13px; }
-.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.pill { white-space: nowrap; display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
 .pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--s4); }
 
 /* day header */
@@ -183,7 +183,7 @@ select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-wei
 .cr small { color: var(--faint); font-size: 11.5px; margin-left: 4px; }
 
 /* who am I, lock, welcome */
-.mebtn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 4px 10px 4px 4px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.mebtn { white-space: nowrap; max-width: 46vw; overflow: hidden; text-overflow: ellipsis; display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 4px 10px 4px 4px; cursor: pointer; font-weight: 600; font-size: 13px; }
 .mebtn:hover { background: var(--surface-2); }
 .mebtn .av { width: 24px; height: 24px; font-size: 11px; }
 .mebtn.anon { padding-left: 10px; color: var(--muted); }
@@ -215,6 +215,16 @@ select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-wei
 .steps span { color: var(--muted); font-size: 13px; }
 .steps a.inl { color: var(--accent); font-weight: 600; }
 
+.jform { padding: 4px 18px 6px; display: grid; gap: 12px; }
+.jform label { display: grid; gap: 5px; font-size: 13px; font-weight: 600; }
+.jform label small { font-weight: 400; color: var(--muted); }
+.jform input { font: inherit; font-weight: 400; padding: 9px 11px; border: 1px solid var(--line); border-radius: 6px; background: var(--bg); color: var(--fg); }
+.jform input:focus { outline: 2px solid var(--accent); outline-offset: 0; border-color: transparent; }
+.jmsg { font-size: 13px; padding: 10px 12px; border-radius: 6px; }
+.jmsg.err { background: #fdecea; color: #a1281f; }
+.jmsg.ok { background: var(--accent-soft); color: var(--accent); }
+.jok h3 { margin: 0 0 4px; font-size: 16px; }
+
 /* phones */
 @media (max-width: 980px) {
   .grid-top, .grid-2 { grid-template-columns: 1fr; }
@@ -238,6 +248,7 @@ select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-wei
   .lock .ic { display: none; }
   .hide-xs { display: none; }
   .updated { display: none; }
+  #demoPill { display: none !important; }
   .total { font-size: 23px; }
   .cell { font-size: 13.5px; }
   .cell small { display: none; }
@@ -292,6 +303,7 @@ async function load() {
   if (!data || !data.days || !Object.keys(data.days).length) { data = await (await fetch("data/demo.json")).json(); data.demo = true; }
   try { S.names = await (await fetch("data/names.json", { cache: "no-store" })).json(); } catch {}
   try { S.cfg = await (await fetch("data/config.json", { cache: "no-store" })).json(); } catch { S.cfg = {}; }
+  try { S.members = await (await fetch("data/members.json", { cache: "no-store" })).json(); } catch { S.members = {}; }
   S.data = data;
   S.allDays = Object.keys(data.days).sort().reverse();
   S.days = S.allDays;
@@ -299,7 +311,7 @@ async function load() {
   S.players = [...ids].map((id) => {
     const meta = data.players?.[id] || {};
     const nick = meta.nick || S.days.map((d) => data.days[d].players[id]?.nick).find(Boolean) || "?";
-    return { id, nick, name: S.names[nick] || nick, first: meta.firstSeen || "" };
+    return { id, nick, name: S.members?.[id]?.name || S.names[nick] || nick, first: meta.firstSeen || "" };
   }).sort((a, b) => a.first.localeCompare(b.first) || a.nick.localeCompare(b.nick));
   S.players.forEach((p, i) => { S.color[p.id] = SERIES[i % SERIES.length]; });
   S.me = store.get(data.demo ? "gd.me.demo" : "gd.me", null);
@@ -356,18 +368,42 @@ function openWelcome() {
 }
 function openJoin() {
   const owner = esc(S.cfg.ownerName || "the group owner");
+  const play = esc(S.cfg.playLink || "https://www.geoguessr.com/daily-challenges");
   showModal(`<header><h2 id="mTitle">Join the leaderboard</h2>${xBtn}</header>
-    <p class="lead">Nobody posts scores here. They're pulled from GeoGuessr automatically, so you just need to be connected.</p>
-    <ol class="steps">
-      <li><div><b>Get a GeoGuessr account</b><span>One that can play the Daily Challenge.</span></div></li>
-      <li><div><b>Add ${owner} as a friend</b><span>Open <a class="inl" href="${esc(S.cfg.ownerProfile || "https://www.geoguessr.com")}" target="_blank" rel="noopener">${owner}'s GeoGuessr profile</a> and click Add friend. Then tell ${owner} so he accepts it.</span></div></li>
-      <li><div><b>Play the Daily Challenge on weekdays</b><span>Finish all 5 rounds, half-finished games don't count. If you use GeoGuessr's incognito option, turn it off or you won't show up.</span></div></li>
-      <li><div><b>Wait up to 30 minutes</b><span>The board checks GeoGuessr every 30 minutes. Your name appears after your first finished game.</span></div></li>
-      <li><div><b>Come back and pick your name</b><span>Click "Who are you?" at the top. That unlocks today's scores once you've played.</span></div></li>
-    </ol>
-    <div class="mfoot"><button class="btn quiet" id="backBtn">Back</button><a class="btn main" href="${esc(S.cfg.playLink || "https://www.geoguessr.com/daily-challenges")}" target="_blank" rel="noopener">Play today's challenge</a></div>`, () => {
+    <p class="lead">Nobody posts scores here. They're pulled from GeoGuessr automatically once you're on ${owner}'s friends list. Fill this in and the robot does the rest.</p>
+    <form class="jform" id="jform" novalidate>
+      <label>Your GeoGuessr profile link
+        <input name="link" type="url" required placeholder="https://www.geoguessr.com/user/..." autocomplete="off">
+        <small>In GeoGuessr, click your avatar, then Profile, and copy the link from the address bar. It has /user/ in it.</small></label>
+      <label>Your name <input name="name" required maxlength="30" placeholder="What the group calls you" autocomplete="given-name"></label>
+      <label>Group code <input name="code" required autocomplete="off" placeholder="Ask in the Slack channel"></label>
+      <div id="jmsg" role="status" aria-live="polite"></div>
+    </form>
+    <div class="mfoot"><button class="btn quiet" id="backBtn">Back</button><button class="btn main" id="jsend" type="submit" form="jform">Join</button></div>`, () => {
     $("#backBtn").onclick = openWelcome;
     $("[data-close]").onclick = () => { if (!S.me) store.set("gd.skipped", true); closeModal(); };
+    $("#jform").onsubmit = async (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target), msg = $("#jmsg"), btn = $("#jsend");
+      msg.className = ""; msg.textContent = "";
+      const body = { link: f.get("link"), name: f.get("name"), code: f.get("code") };
+      if (!/[0-9a-f]{24}/i.test(body.link || "")) { msg.className = "jmsg err"; msg.textContent = "That doesn't look like a GeoGuessr profile link. It should have /user/ and a long code in it."; return; }
+      if (!String(body.name || "").trim()) { msg.className = "jmsg err"; msg.textContent = "Add your name."; return; }
+      btn.disabled = true; btn.textContent = "Joining...";
+      try {
+        const r = await fetch("api/join", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+        const j = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(j.error || "Something broke. Try again in a minute.");
+        $(".modal").innerHTML = `<header><h2 id="mTitle">You're in, ${esc(j.name)}</h2>${xBtn}</header>
+          <ol class="steps">
+            <li><div><b>Watch for a friend request</b><span>Within a few minutes, ${owner}'s account will accept your request or send you one. If one arrives in GeoGuessr, accept it.</span></div></li>
+            <li><div><b>Play the Daily Challenge on weekdays</b><span>Finish all 5 rounds, half-finished games don't count. If you use GeoGuessr's incognito option, turn it off.</span></div></li>
+            <li><div><b>That's it</b><span>Your score posts to Slack and shows up here on its own. Come back and pick your name under "Who are you?" to unlock today's board.</span></div></li>
+          </ol>
+          <div class="mfoot"><span></span><a class="btn main" href="${play}" target="_blank" rel="noopener">Play today's challenge</a></div>`;
+        $("[data-close]").onclick = closeModal;
+      } catch (err) { msg.className = "jmsg err"; msg.textContent = err.message; btn.disabled = false; btn.textContent = "Join"; }
+    };
   });
 }
 function lockCard() {
