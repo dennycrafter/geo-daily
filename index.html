@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geo Daily</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%230f7a4b' d='M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z'/%3E%3C/svg%3E">
+<style>
+@font-face { font-family: "Saira Condensed"; font-weight: 600; font-display: swap; src: url(fonts/saira-condensed-latin-600-normal.woff2) format("woff2"); }
+@font-face { font-family: "Saira Condensed"; font-weight: 700; font-display: swap; src: url(fonts/saira-condensed-latin-700-normal.woff2) format("woff2"); }
+
+:root {
+  color-scheme: light;
+  --bg: #f4f3ee;
+  --surface: #ffffff;
+  --surface-2: #f1f0ea;
+  --line: #e3e1d9;
+  --fg: #17171a;
+  --muted: #6c6b65;
+  --faint: #9b9a93;
+  --accent: #0f7a4b;
+  --accent-soft: #e3f1ea;
+  --gold: #c99a06; --silver: #8d969e; --bronze: #b06a3b;
+  --r: 8px;
+  --num: "Saira Condensed", "Arial Narrow", sans-serif;
+  --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+  --s5: #e87ba4; --s6: #008300; --s7: #6250d6; --s8: #e34948;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 14px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.wrap { max-width: 1320px; margin: 0 auto; padding: 0 clamp(16px, 2.6vw, 40px); }
+
+/* top bar */
+.top { position: sticky; top: 0; z-index: 20; background: rgba(244,243,238,.82); backdrop-filter: saturate(1.4) blur(12px); -webkit-backdrop-filter: saturate(1.4) blur(12px); border-bottom: 1px solid var(--line); }
+.top .wrap { display: flex; align-items: center; gap: 16px; height: 58px; }
+.logo { display: flex; align-items: center; gap: 9px; font-weight: 700; font-size: 16px; letter-spacing: -.01em; }
+.logo svg { width: 26px; height: 26px; }
+.top .spacer { flex: 1; }
+.updated { color: var(--muted); font-size: 13px; }
+.pill { display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px; font-size: 12px; font-weight: 600; background: var(--surface-2); border: 1px solid var(--line); color: var(--muted); }
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--s4); }
+
+/* day header */
+.dayhead { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; padding: 28px 0 16px; flex-wrap: wrap; }
+.daynav { display: flex; align-items: center; gap: 10px; }
+.daynav h1 { margin: 0; font-size: 28px; letter-spacing: -.02em; line-height: 1.1; min-width: 0; }
+.daynav .sub { color: var(--muted); font-size: 13px; margin-top: 4px; }
+.iconbtn { width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--line); background: var(--surface); display: grid; place-items: center; cursor: pointer; flex: none; }
+.iconbtn:hover:not(:disabled) { background: var(--surface-2); }
+.iconbtn:disabled { opacity: .35; cursor: default; }
+.iconbtn svg { width: 16px; height: 16px; }
+
+/* boxes */
+.box { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); }
+.boxhead { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--line); }
+.boxhead h2 { margin: 0; font-size: 14px; font-weight: 650; }
+.boxhead .note { color: var(--muted); font-size: 12.5px; }
+.grid-top { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 16px; align-items: start; }
+section { margin-bottom: 16px; }
+
+/* leaderboard */
+.lb-row { display: grid; grid-template-columns: 44px minmax(120px, 1.2fr) 96px minmax(250px, 2.4fr) 70px 86px; align-items: center; gap: 12px; padding: 12px 18px; border-bottom: 1px solid var(--line); }
+.lb-row:last-child { border-bottom: 0; }
+.lb-row.head { padding-top: 10px; padding-bottom: 10px; color: var(--muted); font-size: 12px; background: var(--surface); }
+.lb-row.head .rounds div { text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rank { font-family: var(--num); font-weight: 700; font-size: 22px; color: var(--faint); text-align: center; }
+.rank.r1 { color: var(--gold); } .rank.r2 { color: var(--silver); } .rank.r3 { color: var(--bronze); }
+.who { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.av { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; color: #fff; font-weight: 700; font-size: 13px; flex: none; }
+.name { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.name small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+.total { font-family: var(--num); font-weight: 700; font-size: 26px; text-align: right; letter-spacing: .01em; }
+.rounds { display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px; }
+.cell { border-radius: 4px; text-align: center; padding: 5px 0 4px; font-family: var(--num); font-weight: 600; font-size: 15px; line-height: 1.1; }
+.cell small { display: block; font-family: -apple-system, "Segoe UI", sans-serif; font-weight: 500; font-size: 10.5px; opacity: .8; }
+.cell.perfect { box-shadow: inset 0 0 0 2px var(--gold); }
+.num { font-family: var(--num); font-weight: 600; font-size: 16px; text-align: right; color: var(--muted); }
+.lb-row.out { color: var(--faint); }
+.lb-row.out .who .av { opacity: .35; }
+.lb-row.out .name { color: var(--muted); font-weight: 500; }
+.outnote { grid-column: 3 / -1; color: var(--faint); font-size: 13px; }
+.empty { padding: 36px 18px; text-align: center; color: var(--muted); }
+
+/* awards */
+.awards { display: grid; gap: 1px; background: var(--line); border-radius: 0 0 var(--r) var(--r); overflow: hidden; }
+.award { background: var(--surface); padding: 14px 18px; display: grid; grid-template-columns: 34px 1fr; gap: 12px; align-items: center; }
+.award .ic { width: 34px; height: 34px; border-radius: 6px; background: var(--surface-2); display: grid; place-items: center; font-size: 17px; }
+.award .lbl { color: var(--muted); font-size: 12px; }
+.award .val { font-weight: 600; }
+.award .val b { font-family: var(--num); font-size: 18px; font-weight: 700; margin-right: 4px; }
+
+/* season strip */
+.strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.stat { background: var(--surface); padding: 16px 18px; min-width: 0; }
+.stat .lbl { color: var(--muted); font-size: 12px; }
+.stat .big { font-family: var(--num); font-weight: 700; font-size: 34px; line-height: 1.1; margin-top: 4px; }
+.stat .who2 { display: flex; align-items: center; gap: 7px; font-weight: 600; margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.dotc { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+
+/* standings */
+.st-row { display: grid; grid-template-columns: minmax(150px, 1.4fr) repeat(5, minmax(56px, .6fr)) 150px; gap: 12px; align-items: center; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+.st-row:last-child { border-bottom: 0; }
+.st-row.head { color: var(--muted); font-size: 12px; padding-top: 9px; padding-bottom: 9px; }
+.st-row.head > div:not(:first-child) { text-align: right; }
+.st-row .n { font-family: var(--num); font-weight: 600; font-size: 17px; text-align: right; }
+.st-row .n.lead { color: var(--accent); }
+.form { display: flex; gap: 3px; justify-content: flex-end; }
+.form span { width: 18px; height: 18px; border-radius: 3px; display: grid; place-items: center; font-family: var(--num); font-size: 12px; font-weight: 700; background: var(--surface-2); color: var(--faint); }
+.form span.w { background: var(--accent); color: #fff; }
+.form span.p { background: var(--accent-soft); color: var(--accent); }
+
+/* chart */
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 6px; overflow: hidden; background: var(--bg); }
+.seg button { border: 0; background: transparent; padding: 5px 11px; font-size: 12.5px; cursor: pointer; color: var(--muted); }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--fg); font-weight: 600; }
+.controls { display: flex; gap: 8px; flex-wrap: wrap; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 16px; padding: 12px 18px 0; font-size: 13px; }
+.legend button { display: inline-flex; align-items: center; gap: 7px; border: 0; background: none; padding: 2px 0; cursor: pointer; }
+.legend button[aria-pressed="false"] { opacity: .4; }
+.chartwrap { position: relative; padding: 8px 10px 12px; }
+.chartwrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+.axis text { fill: var(--muted); font-size: 11px; }
+.grid line { stroke: var(--line); }
+.tip { position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line); border-radius: 6px; box-shadow: 0 6px 16px rgba(0,0,0,.08); padding: 9px 11px; font-size: 12.5px; min-width: 170px; opacity: 0; transition: opacity .1s; z-index: 5; }
+.tip .t { font-weight: 650; margin-bottom: 5px; }
+.tip .r { display: flex; align-items: center; gap: 7px; justify-content: space-between; }
+.tip .r span:first-child { display: flex; align-items: center; gap: 7px; }
+.tip b { font-family: var(--num); font-size: 14px; }
+.tablewrap { overflow-x: auto; padding: 4px 0 8px; }
+table.dt { border-collapse: collapse; width: 100%; font-size: 13px; }
+table.dt th, table.dt td { padding: 7px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+table.dt th:first-child, table.dt td:first-child { text-align: left; }
+table.dt th { color: var(--muted); font-weight: 500; font-size: 12px; }
+table.dt td { font-family: var(--num); font-size: 15px; font-weight: 600; }
+table.dt td:first-child { font-family: inherit; font-size: 13px; color: var(--muted); font-weight: 400; }
+
+footer { color: var(--faint); font-size: 12px; padding: 8px 0 40px; }
+
+/* phones */
+@media (max-width: 980px) {
+  .grid-top { grid-template-columns: 1fr; }
+  .awards { grid-template-columns: 1fr 1fr; }
+  .lb-row { grid-template-columns: 34px minmax(0, 1fr) 84px; row-gap: 8px; }
+  .lb-row .rounds { grid-column: 2 / -1; }
+  .lb-row .num, .lb-row.head .num, .lb-row.head .rounds, .lb-row.head > .h-total { display: none; }
+  .lb-row.head { display: none; }
+  .outnote { grid-column: 3; text-align: right; }
+  .strip { grid-template-columns: 1fr 1fr; }
+  .st-row { grid-template-columns: minmax(0, 1fr) repeat(3, 52px); }
+  .st-row .hide-sm { display: none; }
+}
+@media (max-width: 520px) {
+  .awards { grid-template-columns: 1fr; }
+  .daynav h1 { font-size: 22px; }
+  .hide-xs { display: none; }
+  .updated { display: none; }
+  .total { font-size: 23px; }
+  .cell { font-size: 13.5px; }
+  .cell small { display: none; }
+  .stat .big { font-size: 28px; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="logo">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="var(--accent)" d="M12 2a7 7 0 0 0-7 7c0 5 7 13 7 13s7-8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+      Geo Daily
+    </div>
+    <div class="spacer"></div>
+    <span id="demoPill" class="pill" hidden><span class="dot"></span>Demo data</span>
+    <span id="updated" class="updated"></span>
+  </div>
+</header>
+
+<main class="wrap" id="app">
+  <div class="empty">Loading scores...</div>
+</main>
+
+<script>
+const $ = (s, el = document) => el.querySelector(s);
+const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+const fmt = (n) => Math.round(n).toLocaleString("en-US");
+const SERIES = ["--s1","--s2","--s3","--s4","--s5","--s6","--s7","--s8"].map((v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+const regionName = (() => { try { const d = new Intl.DisplayNames(["en"], { type: "region" }); return (c) => { try { return d.of(c.toUpperCase()); } catch { return c.toUpperCase(); } }; } catch { return (c) => c.toUpperCase(); } })();
+const shortRegion = (c) => { const n = regionName(c || "?"); return n.length > 14 ? c.toUpperCase() : n; };
+const dayLabel = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
+const dayShort = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" });
+const ago = (iso) => { if (!iso) return ""; const m = Math.round((Date.now() - new Date(iso)) / 60000); if (m < 1) return "just now"; if (m < 60) return m + " min ago"; const h = Math.round(m / 60); if (h < 48) return h + "h ago"; return Math.round(h / 24) + " days ago"; };
+const mmss = (s) => `${Math.floor(s / 60)}:${String(Math.round(s % 60)).padStart(2, "0")}`;
+const kmStr = (k) => k < 1 ? Math.round(k * 1000) + " m" : k < 100 ? k.toFixed(1) + " km" : fmt(k) + " km";
+const store = { get(k, d) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch { return d; } }, set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} } };
+
+// sequential blue ramp for round scores (light -> dark)
+const RAMP = ["#eef4fc","#cde2fb","#9ec5f4","#6da7ec","#3987e5","#256abf","#184f95"];
+function heat(p) { const i = p >= 5000 ? 6 : Math.min(5, Math.floor((p / 5000) * 6)); return { bg: RAMP[i], fg: i >= 4 ? "#fff" : "#17262f" }; }
+
+let S = { data: null, names: {}, days: [], dayIdx: 0, players: [], color: {}, range: store.get("gd.range", 30), view: "chart", hidden: new Set() };
+
+async function load() {
+  const qs = new URLSearchParams(location.search);
+  let data = null;
+  if (!qs.has("demo")) { try { data = await (await fetch("data/scores.json", { cache: "no-store" })).json(); } catch {} }
+  if (!data || !data.days || !Object.keys(data.days).length) { data = await (await fetch("data/demo.json")).json(); data.demo = true; }
+  try { S.names = await (await fetch("data/names.json", { cache: "no-store" })).json(); } catch {}
+  S.data = data;
+  S.days = Object.keys(data.days).sort().reverse();
+  const ids = new Set(); S.days.forEach((d) => Object.keys(data.days[d].players).forEach((id) => ids.add(id)));
+  S.players = [...ids].map((id) => {
+    const meta = data.players?.[id] || {};
+    const nick = meta.nick || S.days.map((d) => data.days[d].players[id]?.nick).find(Boolean) || "?";
+    return { id, nick, name: S.names[nick] || nick, first: meta.firstSeen || "" };
+  }).sort((a, b) => a.first.localeCompare(b.first) || a.nick.localeCompare(b.nick));
+  S.players.forEach((p, i) => { S.color[p.id] = SERIES[i % SERIES.length]; });
+  $("#demoPill").hidden = !data.demo;
+  $("#updated").textContent = data.updatedAt ? "Updated " + ago(data.updatedAt) : "";
+  const want = qs.get("day"); if (want && S.days.includes(want)) S.dayIdx = S.days.indexOf(want);
+  render();
+}
+
+const P = (id) => S.players.find((p) => p.id === id);
+const avatar = (id, size) => { const p = P(id); return `<span class="av" style="background:${S.color[id]}${size ? `;width:${size}px;height:${size}px;font-size:${size * .43}px` : ""}" aria-hidden="true">${esc((p?.name || "?").slice(0, 1).toUpperCase())}</span>`; };
+function ranked(day) { return Object.entries(S.data.days[day].players).map(([id, r]) => ({ id, ...r })).sort((a, b) => b.total - a.total || a.time - b.time); }
+
+// ---------- season math ----------
+function season(days) {
+  const st = {}; S.players.forEach((p) => st[p.id] = { id: p.id, wins: 0, sum: 0, played: 0, best: 0, bestDay: "", perfect: 0, form: [] });
+  const chron = [...days].reverse();
+  let streak = { id: null, n: 0 }, bestStreak = { id: null, n: 0 };
+  for (const d of chron) {
+    const r = ranked(d);
+    r.forEach((row, i) => { const s = st[row.id]; s.played++; s.sum += row.total; if (row.total > s.best) { s.best = row.total; s.bestDay = d; } s.perfect += row.rounds.filter((x) => x.points >= 5000).length; s.form.push({ d, place: i + 1 }); });
+    if (r.length > 1 || (r.length === 1 && S.players.length === 1)) {
+      const w = r[0].id; st[w].wins++;
+      streak = streak.id === w ? { id: w, n: streak.n + 1 } : { id: w, n: 1 };
+      if (streak.n > bestStreak.n) bestStreak = { ...streak };
+    }
+  }
+  Object.values(st).forEach((s) => { s.avg = s.played ? s.sum / s.played : 0; });
+  return { st, bestStreak };
+}
+
+// ---------- render ----------
+function render() {
+  const app = $("#app");
+  if (!S.days.length) { app.innerHTML = `<div class="empty">No scores yet.</div>`; return; }
+  const day = S.days[S.dayIdx];
+  const D = S.data.days[day];
+  const rows = ranked(day);
+  const missing = S.players.filter((p) => !D.players[p.id] && p.first <= day);
+  const isLatest = S.dayIdx === 0;
+  const rounds = D.rounds || [];
+
+  const lbHead = `<div class="lb-row head"><div></div><div>Player</div><div class="h-total" style="text-align:right">Score</div>
+    <div class="rounds">${[0,1,2,3,4].map((i) => `<div title="${esc(regionName(rounds[i]?.country || ""))}">${i + 1}. ${esc(shortRegion(rounds[i]?.country))}</div>`).join("")}</div>
+    <div class="num" style="font:inherit;font-size:12px">Time</div><div class="num" style="font:inherit;font-size:12px">Off by</div></div>`;
+  const lbRows = rows.map((r, i) => `<div class="lb-row">
+      <div class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</div>
+      <div class="who">${avatar(r.id)}<div class="name">${esc(P(r.id)?.name)}${P(r.id)?.name !== r.nick ? `<small>${esc(r.nick)}</small>` : ""}</div></div>
+      <div class="total">${fmt(r.total)}</div>
+      <div class="rounds">${r.rounds.map((x, j) => { const h = heat(x.points); return `<div class="cell ${x.points >= 5000 ? "perfect" : ""}" style="background:${h.bg};color:${h.fg}" title="Round ${j + 1}, ${esc(regionName(rounds[j]?.country || ""))}: ${fmt(x.points)} pts, ${kmStr(x.km)} off, ${mmss(x.time)}">${fmt(x.points)}<small>${kmStr(x.km)}</small></div>`; }).join("")}</div>
+      <div class="num">${mmss(r.time)}</div>
+      <div class="num">${kmStr(r.km)}</div>
+    </div>`).join("");
+  const outRows = missing.map((p) => `<div class="lb-row out"><div class="rank">-</div><div class="who">${avatar(p.id)}<div class="name">${esc(p.name)}</div></div><div class="outnote">${isLatest ? "Hasn't played yet" : "Skipped"}</div></div>`).join("");
+
+  // day awards
+  const all = rows.flatMap((r) => r.rounds.map((x, j) => ({ id: r.id, j, ...x })));
+  const closest = all.length ? all.reduce((a, b) => (b.km < a.km ? b : a)) : null;
+  const whiff = all.length ? all.reduce((a, b) => (b.km > a.km ? b : a)) : null;
+  const fastest = rows.length ? rows.reduce((a, b) => (b.time < a.time ? b : a)) : null;
+  const perfects = all.filter((x) => x.points >= 5000);
+  const award = (ic, lbl, html) => `<div class="award"><div class="ic" aria-hidden="true">${ic}</div><div><div class="lbl">${lbl}</div><div class="val">${html}</div></div></div>`;
+  const nm = (id) => esc(P(id)?.name);
+  const awards = rows.length ? [
+    award("🎯", "Closest guess", `<b>${kmStr(closest.km)}</b> ${nm(closest.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[closest.j]?.country))}</span>`),
+    award("🛰️", "Biggest whiff", `<b>${kmStr(whiff.km)}</b> ${nm(whiff.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[whiff.j]?.country))}</span>`),
+    award("⚡", "Fastest finish", `<b>${mmss(fastest.time)}</b> ${nm(fastest.id)}`),
+    award("⭐", "Perfect rounds", perfects.length ? `<b>${perfects.length}</b> ${[...new Set(perfects.map((x) => P(x.id)?.name))].map(esc).join(", ")}` : `<span style="color:var(--muted);font-weight:400">None today</span>`),
+  ].join("") : "";
+
+  // season (selected range)
+  const rangeDays = S.range === 0 ? S.days : S.days.slice(0, S.range);
+  const { st, bestStreak } = season(rangeDays);
+  const sts = Object.values(st).filter((s) => s.played);
+  const topBy = (k) => sts.reduce((a, b) => (b[k] > a[k] ? b : a), sts[0]);
+  const qual = sts.filter((s) => s.played >= Math.max(1, Math.ceil(rangeDays.length * 0.4)));
+  const avgLead = (qual.length ? qual : sts).reduce((a, b) => (b.avg > a.avg ? b : a));
+  const winsLead = topBy("wins"), bestLead = topBy("best");
+  const stat = (lbl, big, id, extra = "") => `<div class="stat"><div class="lbl">${lbl}</div><div class="big">${big}</div><div class="who2">${id ? `<span class="dotc" style="background:${S.color[id]}"></span>${nm(id)}` : ""}${extra}</div></div>`;
+  const strip = `<div class="strip">
+    ${stat("Most wins", winsLead.wins, winsLead.id)}
+    ${stat("Best average", fmt(avgLead.avg), avgLead.id)}
+    ${stat("Best game", fmt(bestLead.best), bestLead.id, `<span style="color:var(--muted);font-weight:400">· ${dayShort(bestLead.bestDay)}</span>`)}
+    ${stat("Longest win streak", bestStreak.n || 0, bestStreak.id)}
+  </div>`;
+
+  const order = [...sts].sort((a, b) => b.wins - a.wins || b.avg - a.avg);
+  const maxW = Math.max(...sts.map((s) => s.wins)), maxA = Math.max(...sts.map((s) => s.avg));
+  const standings = `<div class="st-row head"><div>Player</div><div>Wins</div><div>Average</div><div>Best</div><div class="hide-sm">Played</div><div class="hide-sm">5Ks</div><div class="hide-sm">Last 7</div></div>` +
+    order.map((s) => `<div class="st-row">
+      <div class="who">${avatar(s.id, 26)}<div class="name">${nm(s.id)}</div></div>
+      <div class="n ${s.wins === maxW && maxW ? "lead" : ""}">${s.wins}</div>
+      <div class="n ${s.avg === maxA ? "lead" : ""}">${fmt(s.avg)}</div>
+      <div class="n">${fmt(s.best)}</div>
+      <div class="n hide-sm">${s.played}</div>
+      <div class="n hide-sm">${s.perfect}</div>
+      <div class="form hide-sm">${s.form.slice(-7).map((f) => `<span class="${f.place === 1 ? "w" : f.place <= 3 ? "p" : ""}" title="${dayShort(f.d)}: place ${f.place}">${f.place}</span>`).join("")}</div>
+    </div>`).join("");
+
+  const rangeBtns = [[7, "7 days"], [30, "30 days"], [0, "All"]].map(([v, l]) => `<button aria-pressed="${S.range === v}" data-range="${v}">${l}</button>`).join("");
+
+  app.innerHTML = `
+  <div class="dayhead">
+    <div class="daynav">
+      <button class="iconbtn" id="prev" aria-label="Previous day" ${S.dayIdx >= S.days.length - 1 ? "disabled" : ""}><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <button class="iconbtn" id="next" aria-label="Next day" ${S.dayIdx === 0 ? "disabled" : ""}><svg viewBox="0 0 16 16"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div style="margin-left:6px;min-width:0">
+        <h1>${isLatest ? "Today" : dayLabel(day)}</h1>
+        <div class="sub">${isLatest ? dayLabel(day) + " · " : ""}Daily challenge · ${esc(D.map || "World")} · ${rows.length} of ${rows.length + missing.length} played</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-top">
+    <section class="box">
+      <div class="boxhead"><h2>Leaderboard</h2><span class="note hide-xs">Round colours: darker is better · gold ring is a 5K</span></div>
+      ${rows.length ? lbHead + lbRows + outRows : `<div class="empty">Nobody has finished this one yet.</div>${outRows}`}
+    </section>
+    <section class="box">
+      <div class="boxhead"><h2>Awards</h2><span class="note">${isLatest ? "Today" : dayShort(day)}</span></div>
+      <div class="awards">${awards || `<div class="award"><div></div><div class="lbl">Nothing yet</div></div>`}</div>
+    </section>
+  </div>
+
+  <section>
+    <div class="boxhead" style="padding:18px 2px 12px;border:0">
+      <h2 style="font-size:16px">Season</h2>
+      <div class="seg" role="group" aria-label="Time range">${rangeBtns}</div>
+    </div>
+    ${strip}
+  </section>
+
+  <section class="box">
+    <div class="boxhead"><h2>Standings</h2><span class="note">${rangeDays.length} days · sorted by wins</span></div>
+    ${standings}
+  </section>
+
+  <section class="box">
+    <div class="boxhead"><h2>Scores over time</h2>
+      <div class="seg" role="group" aria-label="View"><button aria-pressed="${S.view === "chart"}" data-view="chart">Chart</button><button aria-pressed="${S.view === "table"}" data-view="table">Table</button></div>
+    </div>
+    <div id="viz"></div>
+  </section>
+  <footer>Scores pulled automatically from GeoGuessr friends scoreboard. Only finished games count.</footer>`;
+
+  $("#prev").onclick = () => { S.dayIdx++; render(); };
+  $("#next").onclick = () => { S.dayIdx--; render(); };
+  app.querySelectorAll("[data-range]").forEach((b) => b.onclick = () => { S.range = +b.dataset.range; store.set("gd.range", S.range); render(); });
+  app.querySelectorAll("[data-view]").forEach((b) => b.onclick = () => { S.view = b.dataset.view; render(); });
+  renderViz(rangeDays);
+}
+
+function renderViz(rangeDays) {
+  const el = $("#viz");
+  const days = [...rangeDays].reverse();
+  const ids = S.players.map((p) => p.id).filter((id) => days.some((d) => S.data.days[d].players[id]));
+  if (S.view === "table") {
+    el.innerHTML = `<div class="tablewrap"><table class="dt"><thead><tr><th>Day</th>${ids.map((id) => `<th>${esc(P(id).name)}</th>`).join("")}</tr></thead><tbody>${[...days].reverse().map((d) => `<tr><td>${dayLabel(d)}</td>${ids.map((id) => `<td>${S.data.days[d].players[id] ? fmt(S.data.days[d].players[id].total) : "<span style='color:var(--faint)'>-</span>"}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    return;
+  }
+  const legend = `<div class="legend">${ids.map((id) => `<button data-p="${id}" aria-pressed="${!S.hidden.has(id)}"><span class="dotc" style="background:${S.color[id]}"></span>${esc(P(id).name)}</button>`).join("")}</div>`;
+  const W = Math.max(300, Math.round(el.clientWidth - 20) || 1000), H = W < 600 ? 230 : 300, m = { l: 40, r: 12, t: 14, b: 26 };
+  const iw = W - m.l - m.r, ih = H - m.t - m.b;
+  const x = (i) => m.l + (days.length === 1 ? iw / 2 : (i / (days.length - 1)) * iw);
+  const y = (v) => m.t + ih - (v / 25000) * ih;
+  const ticks = [0, 5000, 10000, 15000, 20000, 25000];
+  const step = Math.max(1, Math.ceil(days.length / Math.max(3, Math.floor(W / 120))));
+  let svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily scores per player"><g class="grid">${ticks.map((t) => `<line x1="${m.l}" x2="${W - m.r}" y1="${y(t)}" y2="${y(t)}"/>`).join("")}</g>
+    <g class="axis">${ticks.map((t) => `<text x="${m.l - 8}" y="${y(t) + 4}" text-anchor="end">${t ? t / 1000 + "k" : 0}</text>`).join("")}
+    ${days.map((d, i) => (i % step === 0 || i === days.length - 1) ? `<text x="${x(i)}" y="${H - 6}" text-anchor="middle">${dayShort(d)}</text>` : "").join("")}</g>`;
+  for (const id of ids) {
+    if (S.hidden.has(id)) continue;
+    let path = "", pen = false; const dots = [];
+    days.forEach((d, i) => { const r = S.data.days[d].players[id]; if (!r) { pen = false; return; } path += `${pen ? "L" : "M"}${x(i).toFixed(1)},${y(r.total).toFixed(1)}`; pen = true; dots.push([x(i), y(r.total)]); });
+    svg += `<path d="${path}" fill="none" stroke="${S.color[id]}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    if (days.length <= 31) svg += dots.map(([cx, cy]) => `<circle cx="${cx}" cy="${cy}" r="3.5" fill="${S.color[id]}" stroke="var(--surface)" stroke-width="2"/>`).join("");
+  }
+  svg += `<line id="xh" y1="${m.t}" y2="${m.t + ih}" stroke="var(--faint)" stroke-dasharray="3 3" opacity="0"/><rect id="hit" x="${m.l}" y="${m.t}" width="${iw}" height="${ih}" fill="transparent"/></svg>`;
+  el.innerHTML = legend + `<div class="chartwrap">${svg}<div class="tip" id="tip"></div></div>`;
+  el.querySelectorAll("[data-p]").forEach((b) => b.onclick = () => { const id = b.dataset.p; S.hidden.has(id) ? S.hidden.delete(id) : S.hidden.add(id); renderViz(rangeDays); });
+
+  const svgEl = el.querySelector("svg"), tip = $("#tip"), xh = $("#xh"), wrap = el.querySelector(".chartwrap");
+  const move = (clientX) => {
+    const r = svgEl.getBoundingClientRect(); const px = ((clientX - r.left) / r.width) * W;
+    const i = Math.max(0, Math.min(days.length - 1, Math.round(((px - m.l) / iw) * (days.length - 1))));
+    const d = days[i]; xh.setAttribute("x1", x(i)); xh.setAttribute("x2", x(i)); xh.setAttribute("opacity", 1);
+    const list = ids.filter((id) => !S.hidden.has(id) && S.data.days[d].players[id]).map((id) => ({ id, t: S.data.days[d].players[id].total })).sort((a, b) => b.t - a.t);
+    tip.innerHTML = `<div class="t">${dayLabel(d)}</div>` + (list.length ? list.map((o) => `<div class="r"><span><span class="dotc" style="background:${S.color[o.id]}"></span>${esc(P(o.id).name)}</span><b>${fmt(o.t)}</b></div>`).join("") : `<div style="color:var(--muted)">No scores</div>`);
+    const sx = (x(i) / W) * r.width; const tw = tip.offsetWidth;
+    tip.style.left = Math.min(Math.max(0, sx + 14 + tw > r.width ? sx - tw - 14 : sx + 14), r.width - tw) + 10 + "px";
+    tip.style.top = "18px"; tip.style.opacity = 1;
+  };
+  const hit = $("#hit");
+  hit.addEventListener("pointermove", (e) => move(e.clientX));
+  hit.addEventListener("pointerdown", (e) => move(e.clientX));
+  hit.addEventListener("pointerleave", () => { tip.style.opacity = 0; xh.setAttribute("opacity", 0); });
+}
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest("input,textarea")) return;
+  if (e.key === "ArrowLeft" && S.dayIdx < S.days.length - 1) { S.dayIdx++; render(); }
+  if (e.key === "ArrowRight" && S.dayIdx > 0) { S.dayIdx--; render(); }
+});
+let rz; window.addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { if (S.data && S.view === "chart") { const rd = S.range === 0 ? S.days : S.days.slice(0, S.range); renderViz(rd); } }, 150); });
+load();
+</script>
+</body>
+</html>
