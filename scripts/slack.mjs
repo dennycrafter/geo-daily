@@ -55,9 +55,7 @@ export async function notify({ before, after, now = new Date(), post }) {
       const ranked = done.sort((a, b) => D.players[b].total - D.players[a].total);
       const place = ranked.indexOf(id) + 1;
       const tookLead = place === 1 && ranked.length > 1;
-      const rounds = (p.rounds || []).map((x, j) => ({ ...x, c: regionName(D.rounds?.[j]?.country) }));
-      const best = rounds.length ? rounds.reduce((a, b) => (b.points > a.points ? b : a)) : null;
-      const worst = rounds.length ? rounds.reduce((a, b) => (b.points < a.points ? b : a)) : null;
+      const rounds = p.rounds || []; // no countries here: that would spoil the rounds for people who haven't played
       const perfect = rounds.filter((x) => x.points >= 5000).length;
       const wk = weekTotal(after, id, latest);
       const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
@@ -66,8 +64,7 @@ export async function notify({ before, after, now = new Date(), post }) {
         `🔥🔥 *${name}* just finished the daily! 🔥🔥`,
         ``,
         `🎯 Score: *${fmt(p.total)}*  (${ordinal(place)} of ${ranked.length} so far)`,
-        best ? `🏆 Best round: ${fmt(best.points)} in ${best.c} (${kmStr(best.km)} off)` : null,
-        worst ? `🗑️ Worst round: ${fmt(worst.points)} in ${worst.c} (${kmStr(worst.km)} off)` : null,
+        rounds.length ? `🔢 Rounds: ${rounds.map((x) => fmt(x.points)).join("  ·  ")}` : null,
         perfect ? `⭐ Perfect 5Ks: ${perfect}` : null,
         `⏱️ Time: ${mmss(p.time)}`,
         ``,
