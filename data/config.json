@@ -4,7 +4,7 @@
   "playLink": "https://www.geoguessr.com/daily-challenges",
   "siteUrl": "https://geo-daily-ivory.vercel.app",
   "slack": {
-    "scoresInPings": false,
+    "scoresInPings": true,
     "recapHour": 17,
     "timeZone": "America/Chicago"
   }

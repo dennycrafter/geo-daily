@@ -10,6 +10,24 @@ const fmt = (n) => Math.round(n).toLocaleString("en-US");
 const dayLabel = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric", timeZone: "UTC" });
 const kmStr = (k) => (k < 1 ? Math.round(k * 1000) + " m" : k < 100 ? k.toFixed(1) + " km" : fmt(k) + " km");
 const medal = ["🥇", "🥈", "🥉"];
+const mmss = (t) => `${Math.floor(t / 60)}:${String(Math.round(t % 60)).padStart(2, "0")}`;
+const ordinal = (n) => n + (["th", "st", "nd", "rd"][(n % 100 - 20) % 10] || ["th", "st", "nd", "rd"][n % 100] || "th");
+const regionName = (() => { try { const d = new Intl.DisplayNames(["en"], { type: "region" }); return (c) => { try { return c ? d.of(c.toUpperCase()) : "somewhere"; } catch { return c; } }; } catch { return (c) => c || "somewhere"; } })();
+function weekTotal(data, id, day) { // Mon to Fri of the week containing day
+  const t = new Date(day + "T12:00:00Z"), wd = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - wd);
+  const mon = t.toISOString().slice(0, 10); t.setUTCDate(t.getUTCDate() + 4); const fri = t.toISOString().slice(0, 10);
+  let total = 0, days = 0;
+  for (const [d, D] of Object.entries(data.days)) if (d >= mon && d <= fri && D.players[id]) { total += D.players[id].total; days++; }
+  return days ? { total, days } : null;
+}
+const QUIPS = [
+  [24000, ["Absolute cartographer. Frame this one.", "Are you sure you didn't just live there?", "Google Street View owes you royalties."]],
+  [20000, ["Google Maps is shaking.", "Big brain geography hours.", "That's a passport stamp of a score."]],
+  [15000, ["Solid. Respectable. Mildly boring.", "Not bad, the bollards are proud of you.", "Middle of the map, middle of the pack."]],
+  [10000, ["Was that a guess or a sneeze?", "Somewhere on Earth, roughly. Respect.", "The compass was upside down, wasn't it?"]],
+  [0, ["Did you play with your eyes closed?", "Bold strategy: guess the ocean.", "Lost. Possibly still lost."]],
+];
+function quip(score, seed) { const tier = QUIPS.find(([min]) => score >= min)[1]; let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return tier[h % tier.length]; }
 
 export async function notify({ before, after, now = new Date(), post }) {
   const cfg = await read("data/config.json", {});
@@ -23,25 +41,43 @@ export async function notify({ before, after, now = new Date(), post }) {
   const msgs = [];
   if (!latest) return { msgs, state };
 
-  // 1. pings for people who newly finished the latest day
+  // 1. a "GEO ALERT" for each person who newly finished the latest day
   const ageDays = (now - new Date(latest + "T12:00:00Z")) / 864e5;
   if (ageDays < 2) {
     const D = after.days[latest];
     const had = new Set([...Object.keys(before.days?.[latest]?.players || {}), ...(state.pinged[latest] || [])]);
-    const fresh = Object.keys(D.players).filter((id) => !had.has(id));
-    if (fresh.length) {
-      const ranked = Object.entries(D.players).sort((a, b) => b[1].total - a[1].total).map(([id]) => id);
-      const known = Object.keys(after.players || {});
-      const left = known.filter((id) => !D.players[id]).map((id) => nameOf(id));
-      const who = fresh.map((id) => {
-        const p = D.players[id];
-        return sc.scoresInPings ? `*${nameOf(id, p.nick)}* (${fmt(p.total)}, ${ranked.indexOf(id) + 1} of ${ranked.length} so far)` : `*${nameOf(id, p.nick)}*`;
-      });
-      const verb = fresh.length === 1 ? "finished" : "finished";
-      let text = `✅ ${who.join(", ")} ${verb} the daily (${dayLabel(latest)}). ${Object.keys(D.players).length} of ${known.length} done.`;
-      if (left.length) text += ` Still to play: ${left.join(", ")}.`;
-      msgs.push(text);
-      state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), ...fresh])];
+    const fresh = Object.keys(D.players).filter((id) => !had.has(id)).sort((a, b) => D.players[a].total - D.players[b].total);
+    const known = Object.keys(after.players || {});
+    for (const id of fresh) {
+      const p = D.players[id], name = nameOf(id, p.nick);
+      // standings among people who had finished by the time this person did (fresh ones count in score order)
+      const done = Object.keys(D.players).filter((x) => had.has(x) || fresh.indexOf(x) <= fresh.indexOf(id));
+      const ranked = done.sort((a, b) => D.players[b].total - D.players[a].total);
+      const place = ranked.indexOf(id) + 1;
+      const tookLead = place === 1 && ranked.length > 1;
+      const rounds = (p.rounds || []).map((x, j) => ({ ...x, c: regionName(D.rounds?.[j]?.country) }));
+      const best = rounds.length ? rounds.reduce((a, b) => (b.points > a.points ? b : a)) : null;
+      const worst = rounds.length ? rounds.reduce((a, b) => (b.points < a.points ? b : a)) : null;
+      const perfect = rounds.filter((x) => x.points >= 5000).length;
+      const wk = weekTotal(after, id, latest);
+      const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
+      const lines = [
+        `💥🌍 *GEO ALERT* 🌍💥`,
+        `🔥🔥 *${name}* just finished the daily! 🔥🔥`,
+        ``,
+        `🎯 Score: *${fmt(p.total)}*  (${ordinal(place)} of ${ranked.length} so far)`,
+        best ? `🏆 Best round: ${fmt(best.points)} in ${best.c} (${kmStr(best.km)} off)` : null,
+        worst ? `🗑️ Worst round: ${fmt(worst.points)} in ${worst.c} (${kmStr(worst.km)} off)` : null,
+        perfect ? `⭐ Perfect 5Ks: ${perfect}` : null,
+        `⏱️ Time: ${mmss(p.time)}`,
+        ``,
+        tookLead ? `👑 New leader for ${dayLabel(latest)}!` : null,
+        `_${quip(p.total, id + latest)}_`,
+        wk ? `📅 ${name}'s week so far: ${fmt(wk.total)} over ${wk.days} day${wk.days === 1 ? "" : "s"} 📈` : null,
+        left.length ? `⏳ Still to play: ${left.join(", ")}` : `✅ Everyone's done!`,
+      ].filter((x) => x !== null);
+      msgs.push(lines.join("\n"));
+      state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
     }
   }
 

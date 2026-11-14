@@ -1,7 +1,7 @@
 // Offline test of the Slack messages: fake before/after data, prints what would be posted.
 import { notify } from "../scripts/slack.mjs";
-const mk = (nick, total) => ({ nick, total, km: 900, time: 400, rounds: [{ points: 5000, km: 0.06 }, { points: 1000, km: 4200.5 }] });
-const before = { days: { "2026-11-16": { players: { a: mk("denis", 15000) } } }, players: { a: { nick: "denis" }, b: { nick: "driplessbeing" }, c: { nick: "CoolCity337" } } };
+const mk = (nick, total) => ({ nick, total, km: 900, time: 442, rounds: [{ points: 5000, km: 0.06 }, { points: 4100, km: 120 }, { points: 312, km: 4200.5 }, { points: 4400, km: 80 }, { points: 4388, km: 95 }] });
+const before = { days: { "2026-11-16": { rounds: [{country:"br"},{country:"jp"},{country:"ke"},{country:"fi"},{country:"cl"}], players: { a: mk("denis", 15000) } } }, players: { a: { nick: "denis" }, b: { nick: "driplessbeing" }, c: { nick: "CoolCity337" } } };
 const after = JSON.parse(JSON.stringify(before));
 after.days["2026-11-16"].players.b = mk("driplessbeing", 18200);
 const out = [];
