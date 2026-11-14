@@ -1,0 +1,17 @@
+name: Send Slack test
+
+# Manual only. Posts one fixed message to the Slack channel the webhook belongs to.
+on:
+  workflow_dispatch: {}
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Post test message
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        run: |
+          curl -sS -f -X POST -H 'Content-type: application/json' \
+            --data '{"text":"🌍 Geo Daily is connected. Daily challenge scores will post here automatically."}' \
+            "$SLACK_WEBHOOK_URL"
