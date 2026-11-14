@@ -5,6 +5,7 @@
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { notify, slackPost, saveState } from "./slack.mjs";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data", "scores.json");
@@ -68,6 +69,7 @@ async function main() {
   data.days ||= {};
   data.players ||= {};
   const before = JSON.stringify({ d: data.days, p: data.players });
+  const beforeData = JSON.parse(JSON.stringify(data));
 
   // 1. Which daily challenges exist right now (today + the last few days)
   const today = await get("/api/v3/challenges/daily-challenges/today");
@@ -116,6 +118,17 @@ async function main() {
   if (!authOk) console.log("No unlocked days this run (play today's daily to unlock the friends scoreboard).");
 
   const after = JSON.stringify({ d: data.days, p: data.players });
+
+  // Slack (runs every time, so the 5pm results post goes out even with no new scores)
+  const hook = (process.env.SLACK_WEBHOOK_URL || "").trim();
+  if (hook) {
+    try {
+      const { msgs, state } = await notify({ before: beforeData, after: data, post: (t) => slackPost(hook, t) });
+      await saveState(state);
+      console.log(`Slack: ${msgs.length} message(s) sent`);
+    } catch (e) { console.error("Slack failed: " + (e.message || e)); }
+  }
+
   if (after === before) { console.log("No changes."); return; }
 
   // keep days sorted, newest first

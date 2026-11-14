@@ -1,11 +1,15 @@
 # Geo Daily
 
-A leaderboard for our GeoGuessr daily challenge. Nobody posts scores: every 30 minutes a GitHub robot logs in as Denis, reads the friends scoreboard for the daily challenge, and saves it to `data/scores.json`. The page (`index.html`) shows it.
+A leaderboard for our GeoGuessr daily challenge. Nobody posts scores: a GitHub robot logs in as Denis, reads the friends scoreboard for the daily challenge, saves it to `data/scores.json`, and posts to Slack. The page (`index.html`) shows the full scoreboard.
+
+Schedule: every 5 minutes from 9am to 5pm Austin time, every hour the rest of the day (GitHub can run scheduled jobs a few minutes late).
 
 ## How it works
 
 - `scripts/fetch.mjs` asks GeoGuessr for today's daily plus the last 6 days, then pulls the friends scoreboard for each one. New results get added to `data/scores.json`, and old days are never deleted, so history keeps growing.
-- `.github/workflows/fetch.yml` runs that script every 30 minutes and saves any changes.
+- `.github/workflows/fetch.yml` runs that script on the schedule above and saves any changes.
+- `scripts/slack.mjs` posts to Slack: a ping when someone finishes (no score, so nobody gets spoiled) and one results post per day at 5pm Austin time. Settings live in `data/config.json` under `slack` (`scoresInPings: true` puts scores in the pings). Needs the `SLACK_WEBHOOK_URL` secret.
+- The page asks "Who are you?" and hides today's scores until that person has finished today's challenge.
 - `index.html` is the dashboard. If there are no real scores yet it shows made-up demo data (`data/demo.json`). Add `?demo` to the link to force demo mode.
 - `data/names.json` (optional) swaps GeoGuessr names for real names, for example `{ "driplessbeing": "Jack" }`.
 

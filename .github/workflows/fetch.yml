@@ -2,7 +2,9 @@ name: Pull GeoGuessr scores
 
 on:
   schedule:
-    - cron: "*/30 0-5,12-23 * * *"   # every 30 min, 6am to midnight Austin time
+    # GitHub uses UTC. Austin is UTC-6 in winter (UTC-5 in summer, so these shift an hour).
+    - cron: "*/5 15-22 * * *"        # every 5 min, 9am to 5pm Austin
+    - cron: "0 0-14,23 * * *"        # every hour the rest of the day
   workflow_dispatch: {}       # "Run workflow" button for a manual pull
 
 permissions:
@@ -23,15 +25,17 @@ jobs:
       - name: Pull scores
         env:
           GEO_NCFA: ${{ secrets.GEO_NCFA }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: node scripts/fetch.mjs
       - name: Save if anything changed
         run: |
-          if git diff --quiet -- data/scores.json; then
+          if git diff --quiet -- data/; then
             echo "No new scores."
           else
             git config user.name "geo-daily bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add data/scores.json
+            git add data/scores.json data/slack-state.json 2>/dev/null || git add data/scores.json
             git commit -m "Update scores"
+            git pull --rebase -q || true
             git push
           fi
