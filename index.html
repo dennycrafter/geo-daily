@@ -175,21 +175,45 @@ footer { color: var(--faint); font-size: 12px; padding: 8px 0 40px; }
 .pick { display: flex; gap: 8px; align-items: center; padding: 14px 18px 0; flex-wrap: wrap; }
 select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-weight: 600; color: var(--fg); background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%236c6b65' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center / 14px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 30px 6px 10px; cursor: pointer; max-width: 46%; }
 .vs { color: var(--muted); font-size: 12px; }
-.h2h { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 18px; text-align: center; }
-.h2h .big { font-family: var(--num); font-weight: 700; font-size: 52px; line-height: 1; }
-.h2h .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
-.h2h .mid { color: var(--faint); font-family: var(--num); font-size: 28px; }
-.facts { border-top: 1px solid var(--line); }
-.fact { display: flex; justify-content: space-between; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--line); font-size: 13px; }
-.fact:last-child { border-bottom: 0; }
-.fact span:first-child { color: var(--muted); }
-.fact span:last-child { font-weight: 600; text-align: right; }
 .rc { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-top: 1px solid var(--line); margin-top: 14px; border-radius: 0 0 var(--r) var(--r); overflow: hidden; }
 .rc > div { background: var(--surface); padding: 12px 18px 14px; }
 .rc h3 { margin: 0 0 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
 .cr { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; font-size: 13.5px; }
 .cr b { font-family: var(--num); font-size: 16px; font-weight: 600; }
 .cr small { color: var(--faint); font-size: 11.5px; margin-left: 4px; }
+
+/* who am I, lock, welcome */
+.mebtn { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); border-radius: 6px; padding: 4px 10px 4px 4px; cursor: pointer; font-weight: 600; font-size: 13px; }
+.mebtn:hover { background: var(--surface-2); }
+.mebtn .av { width: 24px; height: 24px; font-size: 11px; }
+.mebtn.anon { padding-left: 10px; color: var(--muted); }
+.lock { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; gap: 16px; align-items: center; padding: 18px; margin-bottom: 16px; }
+.lock .ic { width: 44px; height: 44px; border-radius: 8px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; }
+.lock h2 { margin: 0; font-size: 16px; }
+.lock p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
+.lock .faces { display: flex; gap: 4px; margin-top: 10px; flex-wrap: wrap; }
+.lock .faces .av { width: 26px; height: 26px; font-size: 11px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; border-radius: 6px; padding: 9px 16px; font-weight: 600; font-size: 13.5px; text-decoration: none; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--fg); white-space: nowrap; }
+.btn:hover { background: var(--surface-2); }
+.btn.main { background: var(--accent); border-color: var(--accent); color: #fff; }
+.btn.main:hover { background: #0c6a41; }
+.btn.quiet { border-color: transparent; background: none; color: var(--muted); padding-left: 6px; padding-right: 6px; }
+.scrim { position: fixed; inset: 0; z-index: 50; background: rgba(23,23,26,.35); display: grid; place-items: center; padding: 16px; }
+.modal { width: min(500px, 100%); max-height: calc(100vh - 32px); overflow: auto; background: var(--surface); border: 1px solid var(--line); border-radius: var(--r); box-shadow: 0 6px 16px rgba(0,0,0,.12); }
+.modal header { display: flex; align-items: center; justify-content: space-between; padding: 16px 18px 6px; }
+.modal h2 { margin: 0; font-size: 18px; }
+.modal .lead { color: var(--muted); font-size: 13.5px; padding: 0 18px 14px; margin: 0; }
+.plist { border-top: 1px solid var(--line); }
+.plist button { display: flex; align-items: center; gap: 10px; width: 100%; padding: 10px 18px; border: 0; border-bottom: 1px solid var(--line); background: none; cursor: pointer; text-align: left; font-weight: 600; }
+.plist button:hover { background: var(--surface-2); }
+.plist button[aria-current="true"]::after { content: "You"; margin-left: auto; color: var(--accent); font-size: 12px; font-weight: 600; }
+.mfoot { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 14px 18px; flex-wrap: wrap; }
+.steps { list-style: none; margin: 0; padding: 0 18px; counter-reset: st; }
+.steps li { counter-increment: st; display: grid; grid-template-columns: 28px 1fr; gap: 12px; padding: 12px 0; border-top: 1px solid var(--line); }
+.steps li::before { content: counter(st); width: 26px; height: 26px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; font-family: var(--num); font-weight: 700; font-size: 14px; }
+.steps b { display: block; font-size: 14px; }
+.steps span { color: var(--muted); font-size: 13px; }
+.steps a.inl { color: var(--accent); font-weight: 600; }
 
 /* phones */
 @media (max-width: 980px) {
@@ -210,6 +234,8 @@ select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-wei
 @media (max-width: 520px) {
   .awards { grid-template-columns: 1fr; }
   .daynav h1 { font-size: 22px; }
+  .lock { grid-template-columns: 1fr; }
+  .lock .ic { display: none; }
   .hide-xs { display: none; }
   .updated { display: none; }
   .total { font-size: 23px; }
@@ -230,9 +256,11 @@ select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-wei
     <div class="spacer"></div>
     <span id="demoPill" class="pill" hidden><span class="dot"></span>Demo data</span>
     <span id="updated" class="updated"></span>
+    <button id="meBtn" class="mebtn anon" type="button">Who are you?</button>
   </div>
 </header>
 
+<div id="modalRoot"></div>
 <main class="wrap" id="app">
   <div class="empty">Loading scores...</div>
 </main>
@@ -263,8 +291,10 @@ async function load() {
   if (!qs.has("demo")) { try { data = await (await fetch("data/scores.json", { cache: "no-store" })).json(); } catch {} }
   if (!data || !data.days || !Object.keys(data.days).length) { data = await (await fetch("data/demo.json")).json(); data.demo = true; }
   try { S.names = await (await fetch("data/names.json", { cache: "no-store" })).json(); } catch {}
+  try { S.cfg = await (await fetch("data/config.json", { cache: "no-store" })).json(); } catch { S.cfg = {}; }
   S.data = data;
-  S.days = Object.keys(data.days).sort().reverse();
+  S.allDays = Object.keys(data.days).sort().reverse();
+  S.days = S.allDays;
   const ids = new Set(); S.days.forEach((d) => Object.keys(data.days[d].players).forEach((id) => ids.add(id)));
   S.players = [...ids].map((id) => {
     const meta = data.players?.[id] || {};
@@ -272,6 +302,11 @@ async function load() {
     return { id, nick, name: S.names[nick] || nick, first: meta.firstSeen || "" };
   }).sort((a, b) => a.first.localeCompare(b.first) || a.nick.localeCompare(b.nick));
   S.players.forEach((p, i) => { S.color[p.id] = SERIES[i % SERIES.length]; });
+  S.me = store.get(data.demo ? "gd.me.demo" : "gd.me", null);
+  if (S.me && !S.players.some((p) => p.id === S.me)) S.me = null;
+  applyLock();
+  setMe();
+  if (!S.me && !store.get("gd.skipped", false)) openWelcome();
   S.crown = crowns();
   try { S.world = await (await fetch("data/world.json")).json(); } catch {}
   $("#demoPill").hidden = !data.demo;
@@ -283,6 +318,70 @@ async function load() {
 const P = (id) => S.players.find((p) => p.id === id);
 const avatar = (id, size) => { const p = P(id); return `<span class="av" style="background:${S.color[id]}${size ? `;width:${size}px;height:${size}px;font-size:${size * .43}px` : ""}" aria-hidden="true">${esc((p?.name || "?").slice(0, 1).toUpperCase())}</span>`; };
 function ranked(day) { return Object.entries(S.data.days[day].players).map(([id, r]) => ({ id, ...r })).sort((a, b) => b.total - a.total || a.time - b.time); }
+
+// ---------- who am I + spoiler lock ----------
+function applyLock() { // hide the newest day until "me" has a score for it
+  const latest = S.allDays[0];
+  S.locked = !!latest && !(S.me && S.data.days[latest].players[S.me]);
+  S.days = S.locked ? S.allDays.slice(1) : S.allDays;
+  S.dayIdx = Math.min(S.dayIdx, Math.max(0, S.days.length - 1));
+}
+function setMe() {
+  const b = $("#meBtn"), p = S.me && P(S.me);
+  b.className = "mebtn" + (p ? "" : " anon");
+  b.innerHTML = p ? `${avatar(p.id)}${esc(p.name)}` : "Who are you?";
+  b.onclick = () => openWelcome();
+}
+function closeModal() { $("#modalRoot").innerHTML = ""; document.removeEventListener("keydown", escClose); S.lastFocus?.focus?.(); }
+function escClose(e) { if (e.key === "Escape") { if (!S.me) store.set("gd.skipped", true); closeModal(); } }
+function showModal(html, onReady) {
+  S.lastFocus = document.activeElement;
+  $("#modalRoot").innerHTML = `<div class="scrim" id="scrim"><div class="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle">${html}</div></div>`;
+  $("#scrim").onclick = (e) => { if (e.target.id === "scrim") { if (!S.me) store.set("gd.skipped", true); closeModal(); } };
+  document.addEventListener("keydown", escClose);
+  onReady?.();
+  $(".modal button, .modal a")?.focus();
+}
+const xBtn = `<button class="iconbtn" data-close aria-label="Close"><svg viewBox="0 0 16 16"><path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></button>`;
+function openWelcome() {
+  const list = [...S.players].sort((a, b) => a.name.localeCompare(b.name));
+  showModal(`<header><h2 id="mTitle">Who are you?</h2>${xBtn}</header>
+    <p class="lead">Pick your name. Today's scores stay hidden until you've finished today's challenge, so nobody gets spoiled.</p>
+    <div class="plist">${list.map((p) => `<button data-me="${p.id}" aria-current="${p.id === S.me}">${avatar(p.id)}${esc(p.name)}</button>`).join("")}</div>
+    <div class="mfoot"><span style="color:var(--muted);font-size:13px">Not on the list?</span><button class="btn main" id="newBtn">I'm new, show me how to join</button></div>`, () => {
+    document.querySelectorAll("[data-me]").forEach((b) => b.onclick = () => { S.me = b.dataset.me; store.set(S.data.demo ? "gd.me.demo" : "gd.me", S.me); closeModal(); applyLock(); setMe(); render(); });
+    $("#newBtn").onclick = openJoin;
+    $("[data-close]").onclick = () => { if (!S.me) store.set("gd.skipped", true); closeModal(); };
+  });
+}
+function openJoin() {
+  const owner = esc(S.cfg.ownerName || "the group owner");
+  showModal(`<header><h2 id="mTitle">Join the leaderboard</h2>${xBtn}</header>
+    <p class="lead">Nobody posts scores here. They're pulled from GeoGuessr automatically, so you just need to be connected.</p>
+    <ol class="steps">
+      <li><div><b>Get a GeoGuessr account</b><span>One that can play the Daily Challenge.</span></div></li>
+      <li><div><b>Add ${owner} as a friend</b><span>Open <a class="inl" href="${esc(S.cfg.ownerProfile || "https://www.geoguessr.com")}" target="_blank" rel="noopener">${owner}'s GeoGuessr profile</a> and click Add friend. Then tell ${owner} so he accepts it.</span></div></li>
+      <li><div><b>Play the Daily Challenge on weekdays</b><span>Finish all 5 rounds, half-finished games don't count. If you use GeoGuessr's incognito option, turn it off or you won't show up.</span></div></li>
+      <li><div><b>Wait up to 30 minutes</b><span>The board checks GeoGuessr every 30 minutes. Your name appears after your first finished game.</span></div></li>
+      <li><div><b>Come back and pick your name</b><span>Click "Who are you?" at the top. That unlocks today's scores once you've played.</span></div></li>
+    </ol>
+    <div class="mfoot"><button class="btn quiet" id="backBtn">Back</button><a class="btn main" href="${esc(S.cfg.playLink || "https://www.geoguessr.com/daily-challenges")}" target="_blank" rel="noopener">Play today's challenge</a></div>`, () => {
+    $("#backBtn").onclick = openWelcome;
+    $("[data-close]").onclick = () => { if (!S.me) store.set("gd.skipped", true); closeModal(); };
+  });
+}
+function lockCard() {
+  if (!S.locked) return "";
+  const latest = S.allDays[0], who = Object.keys(S.data.days[latest].players);
+  const meP = S.me && P(S.me);
+  return `<section class="box lock">
+    <div class="ic" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></div>
+    <div><h2>${dayLabel(latest)} is hidden</h2>
+      <p>${meP ? `Finish today's challenge to see the scores, ${esc(meP.name)}. It unlocks within about 30 minutes of you finishing.` : `Pick who you are to unlock it once you've played.`} ${who.length} ${who.length === 1 ? "person has" : "people have"} played so far.</p>
+      <div class="faces">${who.map((id) => `<span title="${esc(P(id)?.name)}">${avatar(id)}</span>`).join("")}</div></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">${meP ? "" : `<button class="btn" id="lockWho">Who are you?</button>`}<a class="btn main" href="${esc(S.cfg.playLink || "https://www.geoguessr.com/daily-challenges")}" target="_blank" rel="noopener">Play now</a></div>
+  </section>`;
+}
 
 // ---------- season math ----------
 function season(days) {
@@ -334,7 +433,7 @@ function periodBox(title, sub, days, totalDays) {
 // ---------- render ----------
 function render() {
   const app = $("#app");
-  if (!S.days.length) { app.innerHTML = `<div class="empty">No scores yet.</div>`; return; }
+  if (!S.days.length) { app.innerHTML = `<div style="padding-top:28px">${lockCard()}</div>` + (S.locked ? "" : `<div class="empty">No scores yet.</div>`); const lw = $("#lockWho"); if (lw) lw.onclick = openWelcome; return; }
   const day = S.days[S.dayIdx];
   const D = S.data.days[day];
   const rows = ranked(day);
@@ -353,7 +452,7 @@ function render() {
       <div class="num">${mmss(r.time)}</div>
       <div class="num">${kmStr(r.km)}</div>
     </div>`).join("");
-  const outRows = missing.map((p) => `<div class="lb-row out"><div class="rank">-</div><div class="who">${avatar(p.id)}<div class="name">${esc(p.name)}</div></div><div class="outnote">${isLatest ? "Hasn't played yet" : "Skipped"}</div></div>`).join("");
+  const outRows = missing.map((p) => `<div class="lb-row out"><div class="rank">-</div><div class="who">${avatar(p.id)}<div class="name">${esc(p.name)}</div></div><div class="outnote">${isLatest && !S.locked ? "Hasn't played yet" : "Skipped"}</div></div>`).join("");
 
   // day awards
   const all = rows.flatMap((r) => r.rounds.map((x, j) => ({ id: r.id, j, ...x })));
@@ -418,13 +517,14 @@ function render() {
   const rangeBtns = [[7, "7 days"], [30, "30 days"], [0, "All"]].map(([v, l]) => `<button aria-pressed="${S.range === v}" data-range="${v}">${l}</button>`).join("");
 
   app.innerHTML = `
-  <div class="dayhead">
+  <div style="height:28px"></div>${lockCard()}
+  <div class="dayhead" style="padding-top:0">
     <div class="daynav">
       <button class="iconbtn" id="prev" aria-label="Previous day" ${S.dayIdx >= S.days.length - 1 ? "disabled" : ""}><svg viewBox="0 0 16 16"><path d="M10 3 5 8l5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="iconbtn" id="next" aria-label="Next day" ${S.dayIdx === 0 ? "disabled" : ""}><svg viewBox="0 0 16 16"><path d="m6 3 5 5-5 5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <div style="margin-left:6px;min-width:0">
-        <h1>${isLatest ? "Today" : dayLabel(day)}</h1>
-        <div class="sub">${isLatest ? dayLabel(day) + " · " : ""}Daily challenge · ${esc(D.map || "World")} · ${rows.length} of ${rows.length + missing.length} played</div>
+        <h1>${isLatest && !S.locked ? "Today" : dayLabel(day)}</h1>
+        <div class="sub">${isLatest && !S.locked ? dayLabel(day) + " · " : ""}Daily challenge · ${esc(D.map || "World")} · ${rows.length} of ${rows.length + missing.length} played</div>
       </div>
     </div>
   </div>
@@ -435,7 +535,7 @@ function render() {
       ${rows.length ? lbHead + lbRows + outRows : `<div class="empty">Nobody has finished this one yet.</div>${outRows}`}
     </section>
     <section class="box">
-      <div class="boxhead"><h2>Awards</h2><span class="note">${isLatest ? "Today" : dayShort(day)}</span></div>
+      <div class="boxhead"><h2>Awards</h2><span class="note">${isLatest && !S.locked ? "Today" : dayShort(day)}</span></div>
       <div class="awards">${awards || `<div class="award"><div></div><div class="lbl">Nothing yet</div></div>`}</div>
     </section>
   </div>
@@ -457,10 +557,7 @@ function render() {
     ${standings}
   </section>
 
-  <div class="grid-2" style="margin-bottom:16px">
-    <section class="box" id="rivals" style="margin:0"></section>
-    <section class="box" id="report" style="margin:0"></section>
-  </div>
+  <section class="box" id="report"></section>
 
   <section class="box">
     <div class="boxhead"><h2>Scores over time</h2>
@@ -470,13 +567,13 @@ function render() {
   </section>
   <footer>Scores pulled automatically from GeoGuessr friends scoreboard. Only finished games count.</footer>`;
 
+  const lw = $("#lockWho"); if (lw) lw.onclick = openWelcome;
   $("#prev").onclick = () => { S.dayIdx++; render(); };
   $("#next").onclick = () => { S.dayIdx--; render(); };
   app.querySelectorAll("[data-range]").forEach((b) => b.onclick = () => { S.range = +b.dataset.range; store.set("gd.range", S.range); render(); });
   app.querySelectorAll("[data-view]").forEach((b) => b.onclick = () => { S.view = b.dataset.view; render(); });
   renderViz(rangeDays);
   renderMap(day);
-  renderRivals();
   renderReport();
 }
 
@@ -511,31 +608,6 @@ function renderMap(day) {
     pts.map((o) => `<div class="mr"><span class="dotc" style="background:${S.color[o.id]}"></span><div class="name">${esc(P(o.id)?.name)}<div class="pts">${fmt(o.g.points)} pts</div></div><div class="km">${kmStr(o.g.km)}</div></div>`).join("") + `</div>`;
   box.innerHTML = head + `<div class="mapgrid"><div class="mapwrap">${svg}</div>${list}</div>`;
   box.querySelectorAll("[data-round]").forEach((b) => b.onclick = () => { S.mapRound = +b.dataset.round; renderMap(day); });
-}
-
-// ---------- rivals (head to head, all days) ----------
-function renderRivals() {
-  const box = $("#rivals");
-  const ids = S.players.map((p) => p.id);
-  if (ids.length < 2) { box.innerHTML = `<div class="boxhead"><h2>Rivals</h2></div><div class="empty">Needs two players.</div>`; return; }
-  if (!S.rA || !ids.includes(S.rA)) { const top = Object.values(season(S.days).st).sort((a, b) => b.wins - a.wins); S.rA = top[0].id; S.rB = top[1].id; }
-  if (S.rB === S.rA) S.rB = ids.find((i) => i !== S.rA);
-  const A = S.rA, B = S.rB;
-  let a = 0, b = 0, tie = 0, both = 0, margin = 0, bigA = null, bigB = null;
-  for (const d of S.days) { const pa = S.data.days[d].players[A], pb = S.data.days[d].players[B]; if (!pa || !pb) continue; both++; const m = pa.total - pb.total; margin += m;
-    if (m > 0) { a++; if (!bigA || m > bigA.m) bigA = { m, d }; } else if (m < 0) { b++; if (!bigB || -m > bigB.m) bigB = { m: -m, d }; } else tie++; }
-  const opt = (sel) => ids.map((id) => `<option value="${id}" ${id === sel ? "selected" : ""}>${esc(P(id).name)}</option>`).join("");
-  const lead = margin === 0 ? "Dead even" : `${esc(P(margin > 0 ? A : B).name)} by ${fmt(Math.abs(margin) / Math.max(1, both))}`;
-  box.innerHTML = `<div class="boxhead"><h2>Rivals</h2><span class="note">All days you both played</span></div>
-    <div class="pick"><select class="sel" id="rA" aria-label="First player">${opt(A)}</select><span class="vs">vs</span><select class="sel" id="rB" aria-label="Second player">${opt(B)}</select></div>
-    <div class="h2h"><div><div class="big" style="color:${S.color[A]}">${a}</div><div class="lbl">${esc(P(A).name)} wins</div></div><div class="mid">:</div><div><div class="big" style="color:${S.color[B]}">${b}</div><div class="lbl">${esc(P(B).name)} wins</div></div></div>
-    <div class="facts">
-      <div class="fact"><span>Days both played</span><span>${both}${tie ? ` · ${tie} tied` : ""}</span></div>
-      <div class="fact"><span>Average gap</span><span>${both ? lead : "-"}</span></div>
-      <div class="fact"><span>Biggest beatdown</span><span>${bigA || bigB ? (() => { const x = (bigA?.m || 0) >= (bigB?.m || 0) ? { id: A, ...bigA } : { id: B, ...bigB }; return `${esc(P(x.id).name)} by ${fmt(x.m)} · ${dayShort(x.d)}`; })() : "-"}</span></div>
-    </div>`;
-  $("#rA").onchange = (e) => { S.rA = e.target.value; if (S.rA === S.rB) S.rB = ids.find((i) => i !== S.rA); renderRivals(); };
-  $("#rB").onchange = (e) => { S.rB = e.target.value; if (S.rA === S.rB) S.rA = ids.find((i) => i !== S.rB); renderRivals(); };
 }
 
 // ---------- country report card (all days) ----------

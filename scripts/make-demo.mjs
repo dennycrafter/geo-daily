@@ -34,6 +34,7 @@ for (let d = 0; d < 24; d++) {
   const entry = { token: "DEMO" + d, map: "World", timeLimit: 180, rounds, players: {} };
   for (const p of players) {
     if (rnd() < 0.12) continue; // skipped a day
+    if (d === 23 && p.id === "p3") continue; // one person still to play today, to show the lock
     const rs = roundDifficulty.map((diff, ri) => {
       let pct = Math.min(1, Math.max(0, p.skill * diff + (rnd() - 0.5) * 0.55));
       if (rnd() < 0.06) pct = 1;
