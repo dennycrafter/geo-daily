@@ -9,7 +9,7 @@ const mkPlayer = (id, nick, pts) => ({
       id, nick, countryCode: "IE",
       totalScoreInPoints: pts.reduce((a, b) => a + b, 0),
       totalDistanceInMeters: 1234567, totalTime: 400,
-      guesses: pts.map((p, i) => ({ roundScoreInPoints: p, distanceInMeters: (5000 - p) * 1000 + 50, time: 60 + i, timedOut: false, timedOutWithGuess: false })),
+      guesses: pts.map((p, i) => ({ lat: 10 + i, lng: 20 - i, roundScoreInPoints: p, distanceInMeters: (5000 - p) * 1000 + 50, time: 60 + i, timedOut: false, timedOutWithGuess: false })),
     },
   },
 });

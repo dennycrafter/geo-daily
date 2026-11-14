@@ -44,6 +44,8 @@ function parseGame(item) {
     km: km(p.totalDistanceInMeters),
     rounds: (p.guesses || []).map((x) => ({
       points: x.roundScoreInPoints ?? 0,
+      lat: typeof x.lat === "number" ? Math.round(x.lat * 1e4) / 1e4 : null,
+      lng: typeof x.lng === "number" ? Math.round(x.lng * 1e4) / 1e4 : null,
       km: km(x.distanceInMeters),
       time: x.time ?? 0,
       timedOut: !!(x.timedOut && !x.timedOutWithGuess),
@@ -55,8 +57,8 @@ function parseRounds(item) {
   const rounds = item?.game?.rounds || [];
   return rounds.map((r) => ({
     country: (r.region?.country || r.streakLocationCode || "").toLowerCase(),
-    lat: r.lat,
-    lng: r.lng,
+    lat: typeof r.lat === "number" ? Math.round(r.lat * 1e4) / 1e4 : null,
+    lng: typeof r.lng === "number" ? Math.round(r.lng * 1e4) / 1e4 : null,
   }));
 }
 

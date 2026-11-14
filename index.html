@@ -157,10 +157,46 @@ footer { color: var(--faint); font-size: 12px; padding: 8px 0 40px; }
 .bar { height: 4px; border-radius: 2px; background: var(--surface-2); margin-top: 6px; overflow: hidden; }
 .bar i { display: block; height: 100%; border-radius: 2px; }
 
+/* guess map */
+.mapgrid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; }
+.mapwrap { position: relative; border-right: 1px solid var(--line); background: #eef3f6; border-bottom-left-radius: var(--r); overflow: hidden; }
+.mapwrap svg { display: block; width: 100%; height: auto; }
+.mapwrap .land { fill: #fbfaf6; stroke: #cfd6d3; }
+.maplist { padding: 6px 0; }
+.maplist .mr { display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; gap: 10px; align-items: center; padding: 8px 16px; }
+.maplist .mr .km { font-family: var(--num); font-weight: 600; font-size: 15px; text-align: right; }
+.maplist .mr .pts { color: var(--muted); font-size: 12px; }
+.maplist .actual { padding: 8px 16px 10px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+.maplist .actual .lbl { color: var(--muted); font-size: 12px; }
+.maplist .actual .val { font-weight: 650; font-size: 15px; }
+.badge { margin-left: 5px; font-size: 13px; cursor: default; }
+
+/* rivals and report card */
+.pick { display: flex; gap: 8px; align-items: center; padding: 14px 18px 0; flex-wrap: wrap; }
+select.sel { appearance: none; -webkit-appearance: none; font: inherit; font-weight: 600; color: var(--fg); background: var(--bg) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='m4 6 4 4 4-4' fill='none' stroke='%236c6b65' stroke-width='1.6' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 8px center / 14px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 30px 6px 10px; cursor: pointer; max-width: 46%; }
+.vs { color: var(--muted); font-size: 12px; }
+.h2h { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 12px; padding: 18px; text-align: center; }
+.h2h .big { font-family: var(--num); font-weight: 700; font-size: 52px; line-height: 1; }
+.h2h .lbl { color: var(--muted); font-size: 12px; margin-top: 4px; }
+.h2h .mid { color: var(--faint); font-family: var(--num); font-size: 28px; }
+.facts { border-top: 1px solid var(--line); }
+.fact { display: flex; justify-content: space-between; gap: 12px; padding: 10px 18px; border-bottom: 1px solid var(--line); font-size: 13px; }
+.fact:last-child { border-bottom: 0; }
+.fact span:first-child { color: var(--muted); }
+.fact span:last-child { font-weight: 600; text-align: right; }
+.rc { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); border-top: 1px solid var(--line); margin-top: 14px; border-radius: 0 0 var(--r) var(--r); overflow: hidden; }
+.rc > div { background: var(--surface); padding: 12px 18px 14px; }
+.rc h3 { margin: 0 0 6px; font-size: 12px; font-weight: 500; color: var(--muted); }
+.cr { display: flex; justify-content: space-between; gap: 10px; padding: 5px 0; font-size: 13.5px; }
+.cr b { font-family: var(--num); font-size: 16px; font-weight: 600; }
+.cr small { color: var(--faint); font-size: 11.5px; margin-left: 4px; }
+
 /* phones */
 @media (max-width: 980px) {
   .grid-top, .grid-2 { grid-template-columns: 1fr; }
   .pd-row { grid-template-columns: 26px minmax(0, 1fr) 140px; }
+  .mapgrid { grid-template-columns: 1fr; }
+  .mapwrap { border-right: 0; border-bottom: 1px solid var(--line); border-radius: 0; }
   .awards { grid-template-columns: 1fr 1fr; }
   .lb-row { grid-template-columns: 34px minmax(0, 1fr) 84px; row-gap: 8px; }
   .lb-row .rounds { grid-column: 2 / -1; }
@@ -236,6 +272,8 @@ async function load() {
     return { id, nick, name: S.names[nick] || nick, first: meta.firstSeen || "" };
   }).sort((a, b) => a.first.localeCompare(b.first) || a.nick.localeCompare(b.nick));
   S.players.forEach((p, i) => { S.color[p.id] = SERIES[i % SERIES.length]; });
+  S.crown = crowns();
+  try { S.world = await (await fetch("data/world.json")).json(); } catch {}
   $("#demoPill").hidden = !data.demo;
   $("#updated").textContent = data.updatedAt ? "Updated " + ago(data.updatedAt) : "";
   const want = qs.get("day"); if (want && S.days.includes(want)) S.dayIdx = S.days.indexOf(want);
@@ -268,17 +306,27 @@ function season(days) {
 // ---------- weeks and months (challenge days, Monday start) ----------
 const weekStart = (d) => { const t = new Date(d + "T12:00:00Z"); const wd = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - wd); return t.toISOString().slice(0, 10); };
 const addDays = (d, n) => { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+const isWeekday = (d) => { const w = new Date(d + "T12:00:00Z").getUTCDay(); return w >= 1 && w <= 5; };
+const weekdaysBetween = (a, b) => { let n = 0; for (let d = a; d <= b; d = addDays(d, 1)) if (isWeekday(d)) n++; return n; };
+function tallyDays(days) { const t = {}; for (const d of days) for (const [id, r] of Object.entries(S.data.days[d].players)) { const x = (t[id] ||= { id, total: 0, played: 0 }); x.total += r.total; x.played++; } return Object.values(t).sort((a, b) => b.total - a.total); }
+function crowns() { // last finished Mon-Fri week: winner gets a crown, last place a spoon
+  if (!S.days.length) return {};
+  const prevWk = addDays(weekStart(S.days[0]), -7);
+  const rows = tallyDays(S.days.filter((d) => d >= prevWk && d <= addDays(prevWk, 4)));
+  if (rows.length < 2) return {};
+  const lab = `${dayShort(prevWk)} to ${dayShort(addDays(prevWk, 4))}`;
+  return { [rows[0].id]: { e: "👑", t: "Won last week (" + lab + ")" }, [rows[rows.length - 1].id]: { e: "🥄", t: "Last place last week (" + lab + ")" } };
+}
+const badge = (id) => { const c = S.crown?.[id]; return c ? `<span class="badge" title="${esc(c.t)}" aria-label="${esc(c.t)}">${c.e}</span>` : ""; };
 const monthName = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
 function periodBox(title, sub, days, totalDays) {
-  const tally = {};
-  for (const d of days) for (const [id, r] of Object.entries(S.data.days[d].players)) { const t = (tally[id] ||= { id, total: 0, played: 0 }); t.total += r.total; t.played++; }
-  const rows = Object.values(tally).sort((a, b) => b.total - a.total);
+  const rows = tallyDays(days);
   const max = rows[0]?.total || 1;
   const body = rows.length ? rows.map((r, i) => `<div class="pd-row">
       <div class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</div>
-      <div style="min-width:0"><div class="who">${avatar(r.id, 24)}<div class="name">${esc(P(r.id)?.name)}</div></div>
+      <div style="min-width:0"><div class="who">${avatar(r.id, 24)}<div class="name">${esc(P(r.id)?.name)}${badge(r.id)}</div></div>
         <div class="bar"><i style="width:${(r.total / max) * 100}%;background:${S.color[r.id]}"></i></div></div>
-      <div><div class="tot">${fmt(r.total)}</div><div class="meta" style="text-align:right">${r.played} of ${totalDays} days · avg ${fmt(r.total / r.played)}</div></div>
+      <div><div class="tot">${fmt(r.total)}</div><div class="meta" style="text-align:right">${r.played} of ${Math.max(totalDays, r.played)} days · avg ${fmt(r.total / r.played)}</div></div>
     </div>`).join("") : `<div class="empty">No games yet.</div>`;
   return `<section class="box"><div class="boxhead"><h2>${title}</h2><span class="note">${sub}</span></div>${body}</section>`;
 }
@@ -299,7 +347,7 @@ function render() {
     <div class="num" style="font:inherit;font-size:12px">Time</div><div class="num" style="font:inherit;font-size:12px">Off by</div></div>`;
   const lbRows = rows.map((r, i) => `<div class="lb-row">
       <div class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</div>
-      <div class="who">${avatar(r.id)}<div class="name">${esc(P(r.id)?.name)}${P(r.id)?.name !== r.nick ? `<small>${esc(r.nick)}</small>` : ""}</div></div>
+      <div class="who">${avatar(r.id)}<div class="name">${esc(P(r.id)?.name)}${badge(r.id)}${P(r.id)?.name !== r.nick ? `<small>${esc(r.nick)}</small>` : ""}</div></div>
       <div class="total">${fmt(r.total)}</div>
       <div class="rounds">${r.rounds.map((x, j) => { const h = heat(x.points); return `<div class="cell ${x.points >= 5000 ? "perfect" : ""}" style="background:${h.bg};color:${h.fg}" title="Round ${j + 1}, ${esc(regionName(rounds[j]?.country || ""))}: ${fmt(x.points)} pts, ${kmStr(x.km)} off, ${mmss(x.time)}">${fmt(x.points)}<small>${kmStr(x.km)}</small></div>`; }).join("")}</div>
       <div class="num">${mmss(r.time)}</div>
@@ -319,21 +367,23 @@ function render() {
     award("🎯", "Closest guess", `<b>${kmStr(closest.km)}</b> ${nm(closest.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[closest.j]?.country))}</span>`),
     award("🛰️", "Biggest whiff", `<b>${kmStr(whiff.km)}</b> ${nm(whiff.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[whiff.j]?.country))}</span>`),
     award("⚡", "Fastest finish", `<b>${mmss(fastest.time)}</b> ${nm(fastest.id)}`),
+    (() => { const avgs = [0,1,2,3,4].map((j) => ({ j, a: rows.reduce((s, r) => s + (r.rounds[j]?.points || 0), 0) / rows.length })); const h = avgs.reduce((a, b) => (b.a < a.a ? b : a)); return award("🧱", "Hardest round", `<b>${fmt(h.a)}</b> avg <span style="color:var(--muted);font-weight:400">· round ${h.j + 1}, ${esc(shortRegion(rounds[h.j]?.country))}</span>`); })(),
     award("⭐", "Perfect rounds", perfects.length ? `<b>${perfects.length}</b> ${[...new Set(perfects.map((x) => P(x.id)?.name))].map(esc).join(", ")}` : `<span style="color:var(--muted);font-weight:400">None today</span>`),
   ].join("") : "";
 
 
   // week and month containing the selected day
-  const wk = weekStart(day), wkEnd = addDays(wk, 6);
-  const wkDays = S.days.filter((d) => d >= wk && d <= wkEnd);
-  const wkSoFar = Math.min(7, Math.round((new Date(S.days[0] + "T12:00:00Z") - new Date(wk + "T12:00:00Z")) / 864e5) + 1);
-  const mo = day.slice(0, 7);
-  const moDays = S.days.filter((d) => d.slice(0, 7) === mo);
-  const moLen = new Date(Date.UTC(+mo.slice(0, 4), +mo.slice(5, 7), 0)).getUTCDate();
-  const moSoFar = S.days[0].slice(0, 7) === mo ? +S.days[0].slice(8, 10) : moLen;
+  const wk = weekStart(day), wkFri = addDays(wk, 4);
+  const wkDays = S.days.filter((d) => d >= wk && d <= wkFri && isWeekday(d));
+  const wkCount = weekdaysBetween(wk, S.days[0] < wkFri ? S.days[0] : wkFri);
+  const mo = day.slice(0, 7), mo1 = mo + "-01";
+  const moEnd = new Date(Date.UTC(+mo.slice(0, 4), +mo.slice(5, 7), 0)).toISOString().slice(0, 10);
+  const moDays = S.days.filter((d) => d.slice(0, 7) === mo && isWeekday(d));
+  const moCount = weekdaysBetween(mo1, S.days[0] < moEnd ? S.days[0] : moEnd);
+  const isThisWk = weekStart(S.days[0]) === wk, isThisMo = S.days[0].slice(0, 7) === mo;
   const periods = `<div class="grid-2">
-    ${periodBox("This week", `${dayShort(wk)} to ${dayShort(wkEnd)}`, wkDays, wkEnd <= S.days[0] ? 7 : wkSoFar)}
-    ${periodBox("This month", monthName(day), moDays, moSoFar)}
+    ${periodBox(isThisWk ? "This week" : "Week", `${dayShort(wk)} to ${dayShort(wkFri)} · weekdays only`, wkDays, wkCount)}
+    ${periodBox(isThisMo ? "This month" : monthName(day), `${isThisMo ? monthName(day) + " · " : ""}weekdays only`, moDays, moCount)}
   </div>`;
 
   // season (selected range)
@@ -356,7 +406,7 @@ function render() {
   const maxW = Math.max(...sts.map((s) => s.wins)), maxA = Math.max(...sts.map((s) => s.avg));
   const standings = `<div class="st-row head"><div>Player</div><div>Wins</div><div>Average</div><div>Best</div><div class="hide-sm">Played</div><div class="hide-sm">5Ks</div><div class="hide-sm">Last 7</div></div>` +
     order.map((s) => `<div class="st-row">
-      <div class="who">${avatar(s.id, 26)}<div class="name">${nm(s.id)}</div></div>
+      <div class="who">${avatar(s.id, 26)}<div class="name">${nm(s.id)}${badge(s.id)}</div></div>
       <div class="n ${s.wins === maxW && maxW ? "lead" : ""}">${s.wins}</div>
       <div class="n ${s.avg === maxA ? "lead" : ""}">${fmt(s.avg)}</div>
       <div class="n">${fmt(s.best)}</div>
@@ -390,6 +440,8 @@ function render() {
     </section>
   </div>
 
+  <section class="box" id="mapbox"></section>
+
   <section>${periods}</section>
 
   <section>
@@ -405,6 +457,11 @@ function render() {
     ${standings}
   </section>
 
+  <div class="grid-2" style="margin-bottom:16px">
+    <section class="box" id="rivals" style="margin:0"></section>
+    <section class="box" id="report" style="margin:0"></section>
+  </div>
+
   <section class="box">
     <div class="boxhead"><h2>Scores over time</h2>
       <div class="seg" role="group" aria-label="View"><button aria-pressed="${S.view === "chart"}" data-view="chart">Chart</button><button aria-pressed="${S.view === "table"}" data-view="table">Table</button></div>
@@ -418,6 +475,86 @@ function render() {
   app.querySelectorAll("[data-range]").forEach((b) => b.onclick = () => { S.range = +b.dataset.range; store.set("gd.range", S.range); render(); });
   app.querySelectorAll("[data-view]").forEach((b) => b.onclick = () => { S.view = b.dataset.view; render(); });
   renderViz(rangeDays);
+  renderMap(day);
+  renderRivals();
+  renderReport();
+}
+
+// ---------- guess map ----------
+function renderMap(day) {
+  const box = $("#mapbox"), D = S.data.days[day], rounds = D.rounds || [], W = S.world;
+  const rows = ranked(day);
+  const has = W && rounds.length && rounds[0].lat != null && rows.some((r) => r.rounds[0]?.lat != null);
+  if (S.mapDay !== day) { S.mapDay = day; S.mapRound = 0; }
+  const j = S.mapRound;
+  const tabs = rounds.map((r, i) => `<button aria-pressed="${i === j}" data-round="${i}">${i + 1}<span class="hide-xs">. ${esc(shortRegion(r.country))}</span></button>`).join("");
+  const head = `<div class="boxhead"><h2>Guess map</h2>${has ? `<div class="seg" role="group" aria-label="Round">${tabs}</div>` : ""}</div>`;
+  if (!has) { box.innerHTML = head + `<div class="empty">No guess locations for this day.</div>`; return; }
+  const X = (lng) => ((lng + 180) / 360) * W.W, Y = (lat) => ((W.latTop - lat) / 360) * W.W;
+  const act = rounds[j];
+  const pts = rows.map((r) => ({ id: r.id, g: r.rounds[j] })).filter((o) => o.g && o.g.lat != null).sort((a, b) => a.g.km - b.g.km);
+  // zoom to fit the actual spot and every guess, keeping the map's shape
+  const xs = [X(act.lng), ...pts.map((o) => X(o.g.lng))], ys = [Y(act.lat), ...pts.map((o) => Y(o.g.lat))];
+  let x0 = Math.min(...xs), x1 = Math.max(...xs), y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const ratio = W.W / W.H; let w = Math.max(x1 - x0, 60) * 1.35, h = Math.max(y1 - y0, 60 / ratio) * 1.35;
+  if (w / h > ratio) h = w / ratio; else w = h * ratio;
+  w = Math.min(w, W.W); h = Math.min(h, W.H);
+  let vx = (x0 + x1) / 2 - w / 2, vy = (y0 + y1) / 2 - h / 2;
+  vx = Math.max(0, Math.min(W.W - w, vx)); vy = Math.max(0, Math.min(W.H - h, vy));
+  const k = w / W.W;
+  let svg = `<svg viewBox="${vx} ${vy} ${w} ${h}" role="img" aria-label="Round ${j + 1} guesses on a world map"><path class="land" d="${W.d}" stroke-width="${0.8 * k}"/>`;
+  for (const o of pts) svg += `<line x1="${X(o.g.lng)}" y1="${Y(o.g.lat)}" x2="${X(act.lng)}" y2="${Y(act.lat)}" stroke="${S.color[o.id]}" stroke-width="${1.6 * k}" stroke-dasharray="${4 * k} ${3 * k}" opacity=".8"/>`;
+  for (const o of [...pts].reverse()) svg += `<circle cx="${X(o.g.lng)}" cy="${Y(o.g.lat)}" r="${6 * k}" fill="${S.color[o.id]}" stroke="#fff" stroke-width="${2 * k}"><title>${esc(P(o.id)?.name)}: ${kmStr(o.g.km)} off, ${fmt(o.g.points)} pts</title></circle>`;
+  const s = 9 * k;
+  svg += `<g transform="translate(${X(act.lng)},${Y(act.lat)})"><circle r="${s}" fill="var(--fg)" stroke="#fff" stroke-width="${2 * k}"/><path d="M${-s * .45},0 L${-s * .1},${s * .38} L${s * .5},${-s * .4}" fill="none" stroke="#fff" stroke-width="${2 * k}" stroke-linecap="round" stroke-linejoin="round"/><title>Real location: ${esc(regionName(act.country || ""))}</title></g></svg>`;
+  const list = `<div class="maplist"><div class="actual"><div class="lbl">Round ${j + 1} was in</div><div class="val">${esc(regionName(act.country || "?"))}</div></div>` +
+    pts.map((o) => `<div class="mr"><span class="dotc" style="background:${S.color[o.id]}"></span><div class="name">${esc(P(o.id)?.name)}<div class="pts">${fmt(o.g.points)} pts</div></div><div class="km">${kmStr(o.g.km)}</div></div>`).join("") + `</div>`;
+  box.innerHTML = head + `<div class="mapgrid"><div class="mapwrap">${svg}</div>${list}</div>`;
+  box.querySelectorAll("[data-round]").forEach((b) => b.onclick = () => { S.mapRound = +b.dataset.round; renderMap(day); });
+}
+
+// ---------- rivals (head to head, all days) ----------
+function renderRivals() {
+  const box = $("#rivals");
+  const ids = S.players.map((p) => p.id);
+  if (ids.length < 2) { box.innerHTML = `<div class="boxhead"><h2>Rivals</h2></div><div class="empty">Needs two players.</div>`; return; }
+  if (!S.rA || !ids.includes(S.rA)) { const top = Object.values(season(S.days).st).sort((a, b) => b.wins - a.wins); S.rA = top[0].id; S.rB = top[1].id; }
+  if (S.rB === S.rA) S.rB = ids.find((i) => i !== S.rA);
+  const A = S.rA, B = S.rB;
+  let a = 0, b = 0, tie = 0, both = 0, margin = 0, bigA = null, bigB = null;
+  for (const d of S.days) { const pa = S.data.days[d].players[A], pb = S.data.days[d].players[B]; if (!pa || !pb) continue; both++; const m = pa.total - pb.total; margin += m;
+    if (m > 0) { a++; if (!bigA || m > bigA.m) bigA = { m, d }; } else if (m < 0) { b++; if (!bigB || -m > bigB.m) bigB = { m: -m, d }; } else tie++; }
+  const opt = (sel) => ids.map((id) => `<option value="${id}" ${id === sel ? "selected" : ""}>${esc(P(id).name)}</option>`).join("");
+  const lead = margin === 0 ? "Dead even" : `${esc(P(margin > 0 ? A : B).name)} by ${fmt(Math.abs(margin) / Math.max(1, both))}`;
+  box.innerHTML = `<div class="boxhead"><h2>Rivals</h2><span class="note">All days you both played</span></div>
+    <div class="pick"><select class="sel" id="rA" aria-label="First player">${opt(A)}</select><span class="vs">vs</span><select class="sel" id="rB" aria-label="Second player">${opt(B)}</select></div>
+    <div class="h2h"><div><div class="big" style="color:${S.color[A]}">${a}</div><div class="lbl">${esc(P(A).name)} wins</div></div><div class="mid">:</div><div><div class="big" style="color:${S.color[B]}">${b}</div><div class="lbl">${esc(P(B).name)} wins</div></div></div>
+    <div class="facts">
+      <div class="fact"><span>Days both played</span><span>${both}${tie ? ` · ${tie} tied` : ""}</span></div>
+      <div class="fact"><span>Average gap</span><span>${both ? lead : "-"}</span></div>
+      <div class="fact"><span>Biggest beatdown</span><span>${bigA || bigB ? (() => { const x = (bigA?.m || 0) >= (bigB?.m || 0) ? { id: A, ...bigA } : { id: B, ...bigB }; return `${esc(P(x.id).name)} by ${fmt(x.m)} · ${dayShort(x.d)}`; })() : "-"}</span></div>
+    </div>`;
+  $("#rA").onchange = (e) => { S.rA = e.target.value; if (S.rA === S.rB) S.rB = ids.find((i) => i !== S.rA); renderRivals(); };
+  $("#rB").onchange = (e) => { S.rB = e.target.value; if (S.rA === S.rB) S.rA = ids.find((i) => i !== S.rB); renderRivals(); };
+}
+
+// ---------- country report card (all days) ----------
+function renderReport() {
+  const box = $("#report");
+  const ids = S.players.map((p) => p.id);
+  if (!S.rc || !ids.includes(S.rc)) S.rc = ids[0];
+  const per = {};
+  for (const d of S.days) { const D = S.data.days[d], r = D.players[S.rc]; if (!r || !D.rounds) continue;
+    r.rounds.forEach((x, j) => { const c = D.rounds[j]?.country; if (!c) return; const o = (per[c] ||= { c, sum: 0, n: 0 }); o.sum += x.points; o.n++; }); }
+  const list = Object.values(per).map((o) => ({ ...o, avg: o.sum / o.n }));
+  const enough = list.filter((o) => o.n >= 2);
+  const pool = enough.length >= 4 ? enough : list;
+  const best = [...pool].sort((a, b) => b.avg - a.avg).slice(0, 4), worst = [...pool].sort((a, b) => a.avg - b.avg).slice(0, 4);
+  const row = (o) => `<div class="cr"><span>${esc(regionName(o.c))}<small>${o.n}x</small></span><b>${fmt(o.avg)}</b></div>`;
+  box.innerHTML = `<div class="boxhead"><h2>Country report card</h2><span class="note">Average points per round</span></div>
+    <div class="pick"><select class="sel" id="rcP" aria-label="Player" style="max-width:100%">${ids.map((id) => `<option value="${id}" ${id === S.rc ? "selected" : ""}>${esc(P(id).name)}</option>`).join("")}</select><span class="vs">${list.length} countries seen</span></div>
+    ${list.length ? `<div class="rc"><div><h3>Best at</h3>${best.map(row).join("")}</div><div><h3>Worst at</h3>${worst.map(row).join("")}</div></div>` : `<div class="empty">No rounds yet.</div>`}`;
+  $("#rcP").onchange = (e) => { S.rc = e.target.value; renderReport(); };
 }
 
 function renderViz(rangeDays) {
