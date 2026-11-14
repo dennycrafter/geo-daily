@@ -1,1 +1,426 @@
-{ "updatedAt": null, "days": {}, "players": {} }
+{
+ "updatedAt": "2026-11-14T03:15:30.094Z",
+ "days": {
+  "2026-11-13": {
+   "token": "R2rO2iTtNmWBpnqq",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 11310,
+     "time": 535,
+     "km": 31005.8,
+     "rounds": [
+      {
+       "points": 0,
+       "lat": 4.5615,
+       "lng": 102.609,
+       "km": 18226,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 3005,
+       "lat": 11.5171,
+       "lng": 8.9336,
+       "km": 759.3,
+       "time": 37,
+       "timedOut": false
+      },
+      {
+       "points": 2,
+       "lat": -18.6629,
+       "lng": 139.5617,
+       "km": 11428.4,
+       "time": 178,
+       "timedOut": false
+      },
+      {
+       "points": 3497,
+       "lat": 49.1556,
+       "lng": 14.4522,
+       "km": 533.2,
+       "time": 86,
+       "timedOut": false
+      },
+      {
+       "points": 4806,
+       "lat": 47.9036,
+       "lng": 14.0761,
+       "km": 59,
+       "time": 54,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "cr",
+     "lat": 10.2095,
+     "lng": -83.7959
+    },
+    {
+     "country": "ng",
+     "lat": 6.8202,
+     "lng": 3.9116
+    },
+    {
+     "country": "za",
+     "lat": -31.3203,
+     "lng": 20.9554
+    },
+    {
+     "country": "ch",
+     "lat": 47.3912,
+     "lng": 7.7504
+    },
+    {
+     "country": "at",
+     "lat": 48.3507,
+     "lng": 13.6481
+    }
+   ]
+  },
+  "2026-11-12": {
+   "token": "bmGiJTWWx5zj4dqA",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 16949,
+     "time": 779,
+     "km": 4259,
+     "rounds": [
+      {
+       "points": 4756,
+       "lat": -12.0454,
+       "lng": -76.9099,
+       "km": 74.7,
+       "time": 160,
+       "timedOut": false
+      },
+      {
+       "points": 3709,
+       "lat": 42.0796,
+       "lng": -3.2323,
+       "km": 445.6,
+       "time": 179,
+       "timedOut": false
+      },
+      {
+       "points": 2744,
+       "lat": 21.2213,
+       "lng": 74.0046,
+       "km": 895,
+       "time": 88,
+       "timedOut": false
+      },
+      {
+       "points": 4997,
+       "lat": 22.4484,
+       "lng": 114.168,
+       "km": 0.8,
+       "time": 179,
+       "timedOut": false
+      },
+      {
+       "points": 743,
+       "lat": 55.6867,
+       "lng": 51.057,
+       "km": 2842.9,
+       "time": 173,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "pe",
+     "lat": -12.6589,
+     "lng": -76.6299
+    },
+    {
+     "country": "es",
+     "lat": 42.8716,
+     "lng": -8.5588
+    },
+    {
+     "country": "in",
+     "lat": 29.1231,
+     "lng": 75.6994
+    },
+    {
+     "country": "hk",
+     "lat": 22.4551,
+     "lng": 114.1708
+    },
+    {
+     "country": "ru",
+     "lat": 51.7145,
+     "lng": 94.4615
+    }
+   ]
+  },
+  "2026-11-11": {
+   "token": "jcPJNuZ7fW7PVF6L",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 18678,
+     "time": 785,
+     "km": 2252.2,
+     "rounds": [
+      {
+       "points": 3017,
+       "lat": 25.2445,
+       "lng": -100.1517,
+       "km": 753.6,
+       "time": 177,
+       "timedOut": false
+      },
+      {
+       "points": 3215,
+       "lat": 50.1217,
+       "lng": 21.8788,
+       "km": 658.6,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4115,
+       "lat": 38.9338,
+       "lng": 39.6647,
+       "km": 290.6,
+       "time": 118,
+       "timedOut": false
+      },
+      {
+       "points": 3930,
+       "lat": 13.6735,
+       "lng": 100.4775,
+       "km": 359.2,
+       "time": 133,
+       "timedOut": false
+      },
+      {
+       "points": 4401,
+       "lat": -31.4206,
+       "lng": -64.208,
+       "km": 190.3,
+       "time": 178,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "mx",
+     "lat": 28.3972,
+     "lng": -106.8764
+    },
+    {
+     "country": "lt",
+     "lat": 55.8558,
+     "lng": 24.3499
+    },
+    {
+     "country": "tr",
+     "lat": 39.5,
+     "lng": 36.3715
+    },
+    {
+     "country": "th",
+     "lat": 16.0598,
+     "lng": 102.7297
+    },
+    {
+     "country": "ar",
+     "lat": -33.1276,
+     "lng": -64.3508
+    }
+   ]
+  },
+  "2026-11-10": {
+   "token": "pvLpcWAmgysbskc6",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 17561,
+     "time": 408,
+     "km": 4655.6,
+     "rounds": [
+      {
+       "points": 4859,
+       "lat": 5.6146,
+       "lng": -0.2082,
+       "km": 42.8,
+       "time": 169,
+       "timedOut": false
+      },
+      {
+       "points": 458,
+       "lat": 36.2929,
+       "lng": 10.108,
+       "km": 3564.4,
+       "time": 151,
+       "timedOut": false
+      },
+      {
+       "points": 4747,
+       "lat": 53.1412,
+       "lng": 6.3066,
+       "km": 77.5,
+       "time": 42,
+       "timedOut": false
+      },
+      {
+       "points": 4754,
+       "lat": 32.0961,
+       "lng": 34.9375,
+       "km": 75.3,
+       "time": 20,
+       "timedOut": false
+      },
+      {
+       "points": 2743,
+       "lat": 33.7467,
+       "lng": 133.1757,
+       "km": 895.7,
+       "time": 24,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "gh",
+     "lat": 5.7355,
+     "lng": 0.1588
+    },
+    {
+     "country": "sn",
+     "lat": 14.7648,
+     "lng": -16.5264
+    },
+    {
+     "country": "nl",
+     "lat": 52.5362,
+     "lng": 5.7349
+    },
+    {
+     "country": "il",
+     "lat": 32.6959,
+     "lng": 35.309
+    },
+    {
+     "country": "jp",
+     "lat": 39.3408,
+     "lng": 140.399
+    }
+   ]
+  },
+  "2026-11-09": {
+   "token": "gEb4TW2gGKaxRrsJ",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 18923,
+     "time": 651,
+     "km": 2889.4,
+     "rounds": [
+      {
+       "points": 4223,
+       "lat": -0.7229,
+       "lng": 36.49,
+       "km": 251.9,
+       "time": 120,
+       "timedOut": false
+      },
+      {
+       "points": 4051,
+       "lat": 37.9772,
+       "lng": 23.785,
+       "km": 314.1,
+       "time": 43,
+       "timedOut": false
+      },
+      {
+       "points": 4846,
+       "lat": 53.6136,
+       "lng": -8.4992,
+       "km": 46.6,
+       "time": 166,
+       "timedOut": false
+      },
+      {
+       "points": 4629,
+       "lat": 24.7793,
+       "lng": 54.9277,
+       "km": 115.1,
+       "time": 175,
+       "timedOut": false
+      },
+      {
+       "points": 1174,
+       "lat": 15.1106,
+       "lng": 105.89,
+       "km": 2161.6,
+       "time": 147,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "ke",
+     "lat": 0.3348,
+     "lng": 34.4862
+    },
+    {
+     "country": "gr",
+     "lat": 40.5222,
+     "lng": 22.2013
+    },
+    {
+     "country": "ie",
+     "lat": 53.8045,
+     "lng": -9.1293
+    },
+    {
+     "country": "ae",
+     "lat": 25.2852,
+     "lng": 55.9249
+    },
+    {
+     "country": "bt",
+     "lat": 27.4907,
+     "lng": 89.75
+    }
+   ]
+  }
+ },
+ "players": {
+  "69acf4f717013e56098412b8": {
+   "nick": "denis",
+   "firstSeen": "2026-11-09"
+  }
+ }
+}
