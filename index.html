@@ -146,9 +146,21 @@ table.dt td:first-child { font-family: inherit; font-size: 13px; color: var(--mu
 
 footer { color: var(--faint); font-size: 12px; padding: 8px 0 40px; }
 
+
+/* week / month */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: start; }
+.pd-row { display: grid; grid-template-columns: 30px minmax(0, 1fr) 180px; gap: 12px; align-items: center; padding: 11px 18px; border-bottom: 1px solid var(--line); }
+.pd-row:last-child { border-bottom: 0; }
+.pd-row .rank { font-size: 19px; }
+.pd-row .meta { color: var(--muted); font-size: 12px; }
+.pd-row .tot { font-family: var(--num); font-weight: 700; font-size: 22px; text-align: right; }
+.bar { height: 4px; border-radius: 2px; background: var(--surface-2); margin-top: 6px; overflow: hidden; }
+.bar i { display: block; height: 100%; border-radius: 2px; }
+
 /* phones */
 @media (max-width: 980px) {
-  .grid-top { grid-template-columns: 1fr; }
+  .grid-top, .grid-2 { grid-template-columns: 1fr; }
+  .pd-row { grid-template-columns: 26px minmax(0, 1fr) 140px; }
   .awards { grid-template-columns: 1fr 1fr; }
   .lb-row { grid-template-columns: 34px minmax(0, 1fr) 84px; row-gap: 8px; }
   .lb-row .rounds { grid-column: 2 / -1; }
@@ -252,6 +264,25 @@ function season(days) {
   return { st, bestStreak };
 }
 
+
+// ---------- weeks and months (challenge days, Monday start) ----------
+const weekStart = (d) => { const t = new Date(d + "T12:00:00Z"); const wd = (t.getUTCDay() + 6) % 7; t.setUTCDate(t.getUTCDate() - wd); return t.toISOString().slice(0, 10); };
+const addDays = (d, n) => { const t = new Date(d + "T12:00:00Z"); t.setUTCDate(t.getUTCDate() + n); return t.toISOString().slice(0, 10); };
+const monthName = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", year: "numeric", timeZone: "UTC" });
+function periodBox(title, sub, days, totalDays) {
+  const tally = {};
+  for (const d of days) for (const [id, r] of Object.entries(S.data.days[d].players)) { const t = (tally[id] ||= { id, total: 0, played: 0 }); t.total += r.total; t.played++; }
+  const rows = Object.values(tally).sort((a, b) => b.total - a.total);
+  const max = rows[0]?.total || 1;
+  const body = rows.length ? rows.map((r, i) => `<div class="pd-row">
+      <div class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</div>
+      <div style="min-width:0"><div class="who">${avatar(r.id, 24)}<div class="name">${esc(P(r.id)?.name)}</div></div>
+        <div class="bar"><i style="width:${(r.total / max) * 100}%;background:${S.color[r.id]}"></i></div></div>
+      <div><div class="tot">${fmt(r.total)}</div><div class="meta" style="text-align:right">${r.played} of ${totalDays} days · avg ${fmt(r.total / r.played)}</div></div>
+    </div>`).join("") : `<div class="empty">No games yet.</div>`;
+  return `<section class="box"><div class="boxhead"><h2>${title}</h2><span class="note">${sub}</span></div>${body}</section>`;
+}
+
 // ---------- render ----------
 function render() {
   const app = $("#app");
@@ -290,6 +321,20 @@ function render() {
     award("⚡", "Fastest finish", `<b>${mmss(fastest.time)}</b> ${nm(fastest.id)}`),
     award("⭐", "Perfect rounds", perfects.length ? `<b>${perfects.length}</b> ${[...new Set(perfects.map((x) => P(x.id)?.name))].map(esc).join(", ")}` : `<span style="color:var(--muted);font-weight:400">None today</span>`),
   ].join("") : "";
+
+
+  // week and month containing the selected day
+  const wk = weekStart(day), wkEnd = addDays(wk, 6);
+  const wkDays = S.days.filter((d) => d >= wk && d <= wkEnd);
+  const wkSoFar = Math.min(7, Math.round((new Date(S.days[0] + "T12:00:00Z") - new Date(wk + "T12:00:00Z")) / 864e5) + 1);
+  const mo = day.slice(0, 7);
+  const moDays = S.days.filter((d) => d.slice(0, 7) === mo);
+  const moLen = new Date(Date.UTC(+mo.slice(0, 4), +mo.slice(5, 7), 0)).getUTCDate();
+  const moSoFar = S.days[0].slice(0, 7) === mo ? +S.days[0].slice(8, 10) : moLen;
+  const periods = `<div class="grid-2">
+    ${periodBox("This week", `${dayShort(wk)} to ${dayShort(wkEnd)}`, wkDays, wkEnd <= S.days[0] ? 7 : wkSoFar)}
+    ${periodBox("This month", monthName(day), moDays, moSoFar)}
+  </div>`;
 
   // season (selected range)
   const rangeDays = S.range === 0 ? S.days : S.days.slice(0, S.range);
@@ -344,6 +389,8 @@ function render() {
       <div class="awards">${awards || `<div class="award"><div></div><div class="lbl">Nothing yet</div></div>`}</div>
     </section>
   </div>
+
+  <section>${periods}</section>
 
   <section>
     <div class="boxhead" style="padding:18px 2px 12px;border:0">

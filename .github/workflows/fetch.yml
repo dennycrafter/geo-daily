@@ -2,7 +2,7 @@ name: Pull GeoGuessr scores
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # every 30 minutes
+    - cron: "*/30 0-5,12-23 * * *"   # every 30 min, 6am to midnight Austin time
   workflow_dispatch: {}       # "Run workflow" button for a manual pull
 
 permissions:
