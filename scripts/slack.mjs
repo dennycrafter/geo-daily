@@ -63,22 +63,13 @@ export async function notify({ before, after, now = new Date(), post, memberEven
       const place = ranked.indexOf(id) + 1;
       const tookLead = place === 1 && ranked.length > 1;
       const rounds = p.rounds || []; // no countries here: that would spoil the rounds for people who haven't played
-      const perfect = rounds.filter((x) => x.points >= 5000).length;
-      const wk = weekTotal(after, id, latest);
       const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
       const lines = [
-        `💥🌍 *GEO ALERT* 🌍💥`,
-        `🔥🔥 *${name}* just finished the daily! 🔥🔥`,
-        ``,
-        `🎯 Score: *${fmt(p.total)}*  (${ordinal(place)} of ${ranked.length} so far)`,
-        rounds.length ? `🔢 Rounds: ${rounds.map((x) => fmt(x.points)).join("  ·  ")}` : null,
-        perfect ? `⭐ Perfect 5Ks: ${perfect}` : null,
-        `⏱️ Time: ${mmss(p.time)}`,
-        ``,
-        tookLead ? `👑 New leader for ${dayLabel(latest)}!` : null,
+        `🌍 *${name}* finished today's daily`,
+        `*${fmt(p.total)}*  ·  ${ranked.length > 1 ? `${ordinal(place)} of ${ranked.length} so far` : "first one in"}${tookLead ? "  👑" : ""}`,
+        rounds.length ? `${rounds.map((x) => fmt(x.points)).join("  ·  ")}  ·  ${mmss(p.time)}` : null,
         `_${quip(p.total, id + latest)}_`,
-        wk ? `📅 ${name}'s week so far: ${fmt(wk.total)} over ${wk.days} day${wk.days === 1 ? "" : "s"} 📈` : null,
-        left.length ? `⏳ Still to play: ${left.join(", ")}` : `✅ Everyone's done!`,
+        left.length ? `Still to play: ${left.join(", ")}` : (known.length > 1 ? `Everyone's done 🏁` : null),
       ].filter((x) => x !== null);
       msgs.push(lines.join("\n"));
       state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
