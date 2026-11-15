@@ -65,11 +65,13 @@ export async function notify({ before, after, now = new Date(), post, memberEven
       const rounds = p.rounds || []; // no countries here: that would spoil the rounds for people who haven't played
       const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
       const lines = [
-        `🌍 *${name}* finished today's daily`,
-        `*${fmt(p.total)}*  ·  ${ranked.length > 1 ? `${ordinal(place)} of ${ranked.length} so far` : "first one in"}${tookLead ? "  👑" : ""}`,
-        rounds.length ? `${rounds.map((x) => fmt(x.points)).join("  ·  ")}  ·  ${mmss(p.time)}` : null,
+        `🔥🔥 *${name}* just finished the daily! 🔥🔥`,
+        ``,
+        `Score: *${fmt(p.total)}*`,
+        rounds.length ? `Rounds: ${rounds.map((x) => fmt(x.points)).join("  ·  ")}` : null,
+        `Time: ${mmss(p.time)}`,
+        ``,
         `_${quip(p.total, id + latest)}_`,
-        left.length ? `Still to play: ${left.join(", ")}` : (known.length > 1 ? `Everyone's done 🏁` : null),
       ].filter((x) => x !== null);
       msgs.push(lines.join("\n"));
       state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
