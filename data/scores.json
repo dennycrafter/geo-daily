@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-14T20:03:37.779Z",
+ "updatedAt": "2026-11-15T02:24:24.346Z",
  "days": {
   "2026-11-14": {
    "token": "ZiLu2TUhKaUfboZj",
@@ -49,6 +49,55 @@
        "lng": 170.2065,
        "km": 762,
        "time": 29,
+       "timedOut": false
+      }
+     ]
+    },
+    "6af366fa8e3f638e97e5afef": {
+     "nick": "whacklin",
+     "country": "us",
+     "total": 13653,
+     "time": 892,
+     "km": 15076.2,
+     "rounds": [
+      {
+       "points": 4914,
+       "lat": 47.518,
+       "lng": 8.4695,
+       "km": 25.9,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 3711,
+       "lat": -5.1806,
+       "lng": 104.7959,
+       "km": 444.6,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 3978,
+       "lat": 64.6219,
+       "lng": 26.7438,
+       "km": 341.2,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 1048,
+       "lat": 2.4939,
+       "lng": 102.6453,
+       "km": 2331,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 2,
+       "lat": 63.9231,
+       "lng": -141.0789,
+       "km": 11933.4,
+       "time": 172,
        "timedOut": false
       }
      ]
@@ -132,6 +181,55 @@
        "lng": 14.0761,
        "km": 59,
        "time": 54,
+       "timedOut": false
+      }
+     ]
+    },
+    "6af366fa8e3f638e97e5afef": {
+     "nick": "whacklin",
+     "country": "us",
+     "total": 17523,
+     "time": 870,
+     "km": 10120.6,
+     "rounds": [
+      {
+       "points": 4859,
+       "lat": 9.9851,
+       "lng": -84.1131,
+       "km": 42.8,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 3376,
+       "lat": 8.4507,
+       "lng": -1.1431,
+       "km": 585.8,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 10,
+       "lat": 50.9497,
+       "lng": 5.8327,
+       "km": 9267.7,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4742,
+       "lat": 46.7594,
+       "lng": 8.2322,
+       "km": 79.2,
+       "time": 165,
+       "timedOut": false
+      },
+      {
+       "points": 4536,
+       "lat": 47.1415,
+       "lng": 14.3787,
+       "km": 145.1,
+       "time": 165,
        "timedOut": false
       }
      ]
@@ -504,6 +602,10 @@
   "69acf4f717013e56098412b8": {
    "nick": "denis",
    "firstSeen": "2026-11-09"
+  },
+  "6af366fa8e3f638e97e5afef": {
+   "nick": "whacklin",
+   "firstSeen": "2026-11-13"
   }
  }
 }
