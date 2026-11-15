@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-15T02:24:24.346Z",
+ "updatedAt": "2026-11-15T17:34:00.070Z",
  "days": {
   "2026-11-14": {
    "token": "ZiLu2TUhKaUfboZj",
@@ -233,6 +233,55 @@
        "timedOut": false
       }
      ]
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 10864,
+     "time": 685,
+     "km": 16587.7,
+     "rounds": [
+      {
+       "points": 313,
+       "lat": 31.8893,
+       "lng": -116.5231,
+       "km": 4135.6,
+       "time": 112,
+       "timedOut": false
+      },
+      {
+       "points": 2102,
+       "lat": 8.1635,
+       "lng": -7.7352,
+       "km": 1292.6,
+       "time": 178,
+       "timedOut": false
+      },
+      {
+       "points": 4,
+       "lat": -30.6821,
+       "lng": 140.8204,
+       "km": 10649.5,
+       "time": 112,
+       "timedOut": false
+      },
+      {
+       "points": 3964,
+       "lat": 47.837,
+       "lng": 12.3244,
+       "km": 346.4,
+       "time": 136,
+       "timedOut": false
+      },
+      {
+       "points": 4481,
+       "lat": 47.3782,
+       "lng": 12.0019,
+       "km": 163.6,
+       "time": 147,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
@@ -313,6 +362,55 @@
        "lng": 51.057,
        "km": 2842.9,
        "time": 173,
+       "timedOut": false
+      }
+     ]
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 10944,
+     "time": 847,
+     "km": 8887.9,
+     "rounds": [
+      {
+       "points": 565,
+       "lat": 13.839,
+       "lng": -89.1428,
+       "km": 3253.1,
+       "time": 173,
+       "timedOut": false
+      },
+      {
+       "points": 2745,
+       "lat": 41.5223,
+       "lng": 2.1524,
+       "km": 894.4,
+       "time": 177,
+       "timedOut": false
+      },
+      {
+       "points": 2154,
+       "lat": 24.5332,
+       "lng": 87.2787,
+       "km": 1256.4,
+       "time": 173,
+       "timedOut": false
+      },
+      {
+       "points": 4996,
+       "lat": 22.4448,
+       "lng": 114.1674,
+       "km": 1.2,
+       "time": 163,
+       "timedOut": false
+      },
+      {
+       "points": 484,
+       "lat": 50.1928,
+       "lng": 43.7679,
+       "km": 3482.9,
+       "time": 161,
        "timedOut": false
       }
      ]
@@ -399,6 +497,55 @@
        "timedOut": false
       }
      ]
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 18281,
+     "time": 665,
+     "km": 2429.3,
+     "rounds": [
+      {
+       "points": 3100,
+       "lat": 23.6762,
+       "lng": -102.0434,
+       "km": 713.1,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 3417,
+       "lat": 51.9804,
+       "lng": 18.6915,
+       "km": 568,
+       "time": 142,
+       "timedOut": false
+      },
+      {
+       "points": 3536,
+       "lat": 38.6199,
+       "lng": 42.2491,
+       "km": 516.7,
+       "time": 102,
+       "timedOut": false
+      },
+      {
+       "points": 4858,
+       "lat": 16.4365,
+       "lng": 102.8237,
+       "km": 43.1,
+       "time": 103,
+       "timedOut": false
+      },
+      {
+       "points": 3370,
+       "lat": -38.3954,
+       "lng": -64.9756,
+       "km": 588.5,
+       "time": 143,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
@@ -479,6 +626,55 @@
        "lng": 133.1757,
        "km": 895.7,
        "time": 24,
+       "timedOut": false
+      }
+     ]
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 18128,
+     "time": 69,
+     "km": 7287,
+     "rounds": [
+      {
+       "points": 4311,
+       "lat": 7.4074,
+       "lng": -0.9265,
+       "km": 221.2,
+       "time": 22,
+       "timedOut": false
+      },
+      {
+       "points": 57,
+       "lat": -30.7987,
+       "lng": 24.1069,
+       "km": 6672.8,
+       "time": 9,
+       "timedOut": false
+      },
+      {
+       "points": 4799,
+       "lat": 51.9961,
+       "lng": 5.5563,
+       "km": 61.3,
+       "time": 14,
+       "timedOut": false
+      },
+      {
+       "points": 4731,
+       "lat": 32.0162,
+       "lng": 34.9599,
+       "km": 82.4,
+       "time": 12,
+       "timedOut": false
+      },
+      {
+       "points": 4230,
+       "lat": 37.1256,
+       "lng": 139.954,
+       "km": 249.4,
+       "time": 12,
        "timedOut": false
       }
      ]
@@ -565,6 +761,55 @@
        "timedOut": false
       }
      ]
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 21845,
+     "time": 759,
+     "km": 1069.6,
+     "rounds": [
+      {
+       "points": 4025,
+       "lat": -1.1549,
+       "lng": 36.9849,
+       "km": 323.5,
+       "time": 161,
+       "timedOut": false
+      },
+      {
+       "points": 4794,
+       "lat": 40.6758,
+       "lng": 22.9184,
+       "km": 62.9,
+       "time": 159,
+       "timedOut": false
+      },
+      {
+       "points": 4991,
+       "lat": 53.818,
+       "lng": -9.1649,
+       "km": 2.8,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4563,
+       "lat": 24.3321,
+       "lng": 55.0731,
+       "km": 136.5,
+       "time": 140,
+       "timedOut": false
+      },
+      {
+       "points": 3472,
+       "lat": 28.1432,
+       "lng": 84.2678,
+       "km": 544,
+       "time": 119,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
@@ -606,6 +851,10 @@
   "6af366fa8e3f638e97e5afef": {
    "nick": "whacklin",
    "firstSeen": "2026-11-13"
+  },
+  "60510ee60c30bf0001659a65": {
+   "nick": "Nathan Rusk",
+   "firstSeen": "2026-11-09"
   }
  }
 }
