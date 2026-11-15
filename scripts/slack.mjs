@@ -21,13 +21,99 @@ function weekTotal(data, id, day) { // Mon to Fri of the week containing day
   return days ? { total, days } : null;
 }
 const QUIPS = [
-  [24000, ["Absolute cartographer. Frame this one.", "Are you sure you didn't just live there?", "Google Street View owes you royalties."]],
-  [20000, ["Google Maps is shaking.", "Big brain geography hours.", "That's a passport stamp of a score."]],
-  [15000, ["Solid. Respectable. Mildly boring.", "Not bad, the bollards are proud of you.", "Middle of the map, middle of the pack."]],
-  [10000, ["Was that a guess or a sneeze?", "Somewhere on Earth, roughly. Respect.", "The compass was upside down, wasn't it?"]],
-  [0, ["Did you play with your eyes closed?", "Bold strategy: guess the ocean.", "Lost. Possibly still lost."]],
+  [24000, [
+    "Absolute cartographer. Frame this one.",
+    "Are you sure you didn't just live there?",
+    "Google Street View owes you royalties.",
+    "That wasn't geography, that was witchcraft.",
+    "Someone check this person's browser history for the answers.",
+    "The globe called. It wants to know how you knew.",
+    "Scouting report: dangerous. Approach with caution.",
+    "That's a passport-full of correct guesses.",
+    "Pin it, print it, put it on the fridge.",
+    "The pros are taking notes.",
+    "You could guide tours in five countries off that run.",
+    "Everyone else is now playing for second.",
+    "Statistically that should not have happened.",
+    "Bollard whisperer behaviour.",
+    "The map just asked for your autograph.",
+  ]],
+  [20000, [
+    "Google Maps is shaking.",
+    "Big brain geography hours.",
+    "Very respectable. Mildly suspicious.",
+    "You read those road signs like a local.",
+    "Solid run. The pins were mostly on the right continent and then some.",
+    "That's a strong morning for the atlas.",
+    "Somebody's been studying their bollards.",
+    "Tidy work. No notes. Well, a few notes.",
+    "Sharp. Just shy of showing off.",
+    "That's the kind of score you mention casually twice.",
+    "Your geography teacher would be proud. Finally.",
+    "Low-key cooking today.",
+    "Clean run. The compass is pleased.",
+    "That's a podium-shaped number.",
+    "A score worth screenshotting, honestly.",
+  ]],
+  [15000, [
+    "Solid. Respectable. Mildly boring.",
+    "Not bad, the bollards are proud of you.",
+    "Middle of the map, middle of the pack.",
+    "Right continent, mostly. That counts.",
+    "Decent. The kind of score nobody talks about, in a good way.",
+    "Some bangers, some guesses. Classic.",
+    "Perfectly fine. Like a sandwich.",
+    "A B-minus day. We take those.",
+    "You got a few right and blamed the others on the camera.",
+    "Respectable effort with a side of vibes.",
+    "Not your best, not your worst, very much a Tuesday.",
+    "You were close enough to wave at the right answer.",
+    "That's a 'could have been worse' score.",
+    "Steady hands, questionable round three.",
+    "The map was confusing today. We believe you.",
+  ]],
+  [10000, [
+    "Was that a guess or a sneeze?",
+    "Directionally correct. Like, the general direction.",
+    "The compass was upside down, wasn't it?",
+    "Bold choices were made.",
+    "Some of those pins are going to need a passport.",
+    "You played confidently. That's the main thing.",
+    "Geography is hard and today it won.",
+    "Every pin a little adventure.",
+    "Points were scored. Not many, but some.",
+    "You and the map need to have a talk.",
+    "A brave run through the fog.",
+    "Close enough if you squint from space.",
+    "Tomorrow is a new map.",
+    "Somebody blindfolded you at round two, right?",
+    "Not ideal, but the Street View car tried its best too.",
+  ]],
+  [0, [
+    "Did you play with your eyes closed?",
+    "Bold strategy: guess the ocean.",
+    "Lost. Possibly still lost.",
+    "That's one way to see the world.",
+    "The pins went on holiday without you.",
+    "A truly global spread of guesses.",
+    "Interesting interpretation of the map.",
+    "The globe is round, the score is also round.",
+    "We'll call it a scouting mission.",
+    "Somewhere a geography teacher just sighed.",
+    "Character-building run.",
+    "The only way is up from here.",
+    "Did the cat walk on the keyboard?",
+    "You visited every continent except the right one.",
+    "Points are overrated anyway.",
+  ]],
 ];
-function quip(score, seed) { const tier = QUIPS.find(([min]) => score >= min)[1]; let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0; return tier[h % tier.length]; }
+// Picks a joke for the score's range, skipping any posted recently so nothing repeats.
+function quip(score, seed, recent = []) {
+  const tier = QUIPS.find(([min]) => score >= min)[1];
+  let h = 0; for (const ch of seed) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  for (let i = 0; i < tier.length; i++) { const q = tier[(h + i) % tier.length]; if (!recent.includes(q)) { recent.push(q); return q; } }
+  const q = tier[h % tier.length]; recent.push(q); return q;
+}
 
 export async function notify({ before, after, now = new Date(), post, memberEvents = [] }) {
   const cfg = await read("data/config.json", {});
@@ -71,7 +157,7 @@ export async function notify({ before, after, now = new Date(), post, memberEven
         rounds.length ? `Rounds: ${rounds.map((x) => fmt(x.points)).join("  ·  ")}` : null,
         `Time: ${mmss(p.time)}`,
         ``,
-        `_${quip(p.total, id + latest)}_`,
+        `_${quip(p.total, id + latest, (state.recentQuips ||= []))}_`,
       ].filter((x) => x !== null);
       msgs.push(lines.join("\n"));
       state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
@@ -100,6 +186,7 @@ export async function notify({ before, after, now = new Date(), post, memberEven
     state.recapped.push(d);
   }
   state.recapped = state.recapped.sort().slice(-30);
+  if (state.recentQuips) state.recentQuips = state.recentQuips.slice(-40);
   for (const k of Object.keys(state.pinged).sort().slice(0, -7)) delete state.pinged[k];
 
   for (const text of msgs) await post(text);
