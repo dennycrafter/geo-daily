@@ -1,6 +1,89 @@
 {
- "updatedAt": "2026-11-15T17:34:00.070Z",
+ "updatedAt": "2026-11-16T20:49:08.406Z",
  "days": {
+  "2026-11-16": {
+   "token": "pJjKqlcyx6rYhyms",
+   "players": {
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 18973,
+     "time": 586,
+     "km": 2204,
+     "rounds": [
+      {
+       "points": 3068,
+       "lat": 48.8273,
+       "lng": 36.7018,
+       "km": 728.4,
+       "time": 173,
+       "timedOut": false
+      },
+      {
+       "points": 4565,
+       "lat": 53.0827,
+       "lng": -9.2126,
+       "km": 135.8,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 2881,
+       "lat": 16.8358,
+       "lng": 100.3792,
+       "km": 822.1,
+       "time": 113,
+       "timedOut": false
+      },
+      {
+       "points": 3761,
+       "lat": 49.6922,
+       "lng": 16.1467,
+       "km": 424.6,
+       "time": 22,
+       "timedOut": false
+      },
+      {
+       "points": 4698,
+       "lat": 23.9576,
+       "lng": 121.2919,
+       "km": 93.1,
+       "time": 102,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "ua",
+     "lat": 50.295,
+     "lng": 26.8515
+    },
+    {
+     "country": "ie",
+     "lat": 51.8831,
+     "lng": -9.592
+    },
+    {
+     "country": "kh",
+     "lat": 11.5839,
+     "lng": 105.7501
+    },
+    {
+     "country": "hr",
+     "lat": 45.878,
+     "lng": 16.4127
+    },
+    {
+     "country": "tw",
+     "lat": 23.9726,
+     "lng": 120.376
+    }
+   ]
+  },
   "2026-11-14": {
    "token": "ZiLu2TUhKaUfboZj",
    "players": {
