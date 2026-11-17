@@ -20,6 +20,15 @@ function weekTotal(data, id, day) { // Mon to Fri of the week containing day
   for (const [d, D] of Object.entries(data.days)) if (d >= mon && d <= fri && D.players[id]) { total += D.players[id].total; days++; }
   return days ? { total, days } : null;
 }
+// The five round scores as a small lined-up table (Slack shows it in a grey box).
+function roundTable(rounds) {
+  const vals = rounds.map((x) => fmt(x.points));
+  const w = Math.max(5, ...vals.map((v) => v.length));
+  const head = rounds.map((_, i) => String(i + 1).padStart(w)).join("  ");
+  const row = vals.map((v) => v.padStart(w)).join("  ");
+  return "```\n" + head + "\n" + row + "\n```";
+}
+
 const QUIPS = [
   [24000, [
     "Absolute cartographer. Frame this one.",
@@ -150,16 +159,10 @@ export async function notify({ before, after, now = new Date(), post, memberEven
       const tookLead = place === 1 && ranked.length > 1;
       const rounds = p.rounds || []; // no countries here: that would spoil the rounds for people who haven't played
       const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
-      const lines = [
-        `🔥🔥 *${name}* just finished the daily! 🔥🔥`,
-        ``,
-        `Score: *${fmt(p.total)}*`,
-        rounds.length ? `Rounds: ${rounds.map((x) => fmt(x.points)).join("  ·  ")}` : null,
-        `Time: ${mmss(p.time)}`,
-        ``,
-        `_${quip(p.total, id + latest, (state.recentQuips ||= []))}_`,
-      ].filter((x) => x !== null);
-      msgs.push(lines.join("\n"));
+      const body = [`🎯 *${fmt(p.total)}*  ·  ⏱️ ${mmss(p.time)}`];
+      if (rounds.length) body.push(roundTable(rounds));
+      body.push(`_💬 ${quip(p.total, id + latest, (state.recentQuips ||= []))}_`);
+      msgs.push({ text: `🌍 *${name}* just finished the daily`, attachments: [{ color: "#1D9E75", text: body.join("\n"), mrkdwn_in: ["text"] }] });
       state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
     }
   }
@@ -193,8 +196,9 @@ export async function notify({ before, after, now = new Date(), post, memberEven
   return { msgs, state };
 }
 
-export async function slackPost(url, text) {
-  const res = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ text, unfurl_links: false }) });
+export async function slackPost(url, msg) {
+  const payload = typeof msg === "string" ? { text: msg } : msg;
+  const res = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ unfurl_links: false, ...payload }) });
   if (!res.ok) throw new Error(`Slack said ${res.status}: ${await res.text()}`);
 }
 
