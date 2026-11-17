@@ -484,7 +484,7 @@ function render() {
       <div class="rank ${i < 3 ? "r" + (i + 1) : ""}">${i + 1}</div>
       <div class="who">${avatar(r.id)}<div class="name">${esc(P(r.id)?.name)}${badge(r.id)}${P(r.id)?.name !== r.nick ? `<small>${esc(r.nick)}</small>` : ""}</div></div>
       <div class="total">${fmt(r.total)}</div>
-      <div class="rounds">${r.rounds.map((x, j) => { const h = heat(x.points); return `<div class="cell ${x.points >= 5000 ? "perfect" : ""}" style="background:${h.bg};color:${h.fg}" title="Round ${j + 1}, ${esc(regionName(rounds[j]?.country || ""))}: ${fmt(x.points)} pts, ${kmStr(x.km)} off, ${mmss(x.time)}">${fmt(x.points)}<small>${kmStr(x.km)}</small></div>`; }).join("")}</div>
+      <div class="rounds">${r.rounds.length ? "" : `<div style="grid-column:1/-1;color:var(--faint);font-size:12.5px;text-align:center">Round scores show once ${esc(S.cfg.ownerName || "the host")} has played</div>`}${r.rounds.map((x, j) => { const h = heat(x.points); return `<div class="cell ${x.points >= 5000 ? "perfect" : ""}" style="background:${h.bg};color:${h.fg}" title="Round ${j + 1}, ${esc(regionName(rounds[j]?.country || ""))}: ${fmt(x.points)} pts, ${kmStr(x.km)} off, ${mmss(x.time)}">${fmt(x.points)}<small>${kmStr(x.km)}</small></div>`; }).join("")}</div>
       <div class="num">${mmss(r.time)}</div>
       <div class="num">${kmStr(r.km)}</div>
     </div>`).join("");
@@ -502,7 +502,7 @@ function render() {
     award("🎯", "Closest guess", `<b>${kmStr(closest.km)}</b> ${nm(closest.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[closest.j]?.country))}</span>`),
     award("🛰️", "Biggest whiff", `<b>${kmStr(whiff.km)}</b> ${nm(whiff.id)} <span style="color:var(--muted);font-weight:400">· ${esc(shortRegion(rounds[whiff.j]?.country))}</span>`),
     award("⚡", "Fastest finish", `<b>${mmss(fastest.time)}</b> ${nm(fastest.id)}`),
-    (() => { const avgs = [0,1,2,3,4].map((j) => ({ j, a: rows.reduce((s, r) => s + (r.rounds[j]?.points || 0), 0) / rows.length })); const h = avgs.reduce((a, b) => (b.a < a.a ? b : a)); return award("🧱", "Hardest round", `<b>${fmt(h.a)}</b> avg <span style="color:var(--muted);font-weight:400">· round ${h.j + 1}, ${esc(shortRegion(rounds[h.j]?.country))}</span>`); })(),
+    (() => { const rr = rows.filter((r) => r.rounds.length); if (!rr.length) return ""; const avgs = [0,1,2,3,4].map((j) => ({ j, a: rr.reduce((s, r) => s + (r.rounds[j]?.points || 0), 0) / rr.length })); const h = avgs.reduce((a, b) => (b.a < a.a ? b : a)); return award("🧱", "Hardest round", `<b>${fmt(h.a)}</b> avg <span style="color:var(--muted);font-weight:400">· round ${h.j + 1}, ${esc(shortRegion(rounds[h.j]?.country))}</span>`); })(),
     award("⭐", "Perfect rounds", perfects.length ? `<b>${perfects.length}</b> ${[...new Set(perfects.map((x) => P(x.id)?.name))].map(esc).join(", ")}` : `<span style="color:var(--muted);font-weight:400">None today</span>`),
   ].join("") : "";
 

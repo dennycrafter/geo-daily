@@ -94,7 +94,24 @@ async function main() {
     .map((c) => ({ token: c.token, day: String(c.date || "").slice(0, 10) }))
     .filter((c) => c.day);
 
-  // 2. For each one, get the friends scoreboard
+  // 2a. Today's friends list: GeoGuessr gives every friend's total for today, even before you've played.
+  //     No round-by-round here; those get filled in from the scoreboard below once you've played.
+  const todayDay = today.status === 200 ? String(today.body?.date || "").slice(0, 10) : "";
+  if (todayDay && Array.isArray(today.body?.friends) && today.body.friends.length) {
+    const day = (data.days[todayDay] ||= { token: today.body.token, players: {} });
+    day.token = today.body.token;
+    for (const f of today.body.friends) {
+      if (!f?.id || typeof f.totalScore !== "number") continue;
+      const prev = day.players[f.id];
+      if (prev?.rounds?.length) continue; // already have the full game
+      day.players[f.id] = { nick: f.nick, country: (f.countryCode || "").toLowerCase(), total: f.totalScore, time: f.totalTime ?? 0, km: km(f.totalDistance), rounds: [] };
+      const known = (data.players[f.id] ||= { nick: f.nick, firstSeen: todayDay });
+      known.nick = f.nick;
+    }
+    console.log(`${todayDay}: ${today.body.friends.length} friend(s) from today's list`);
+  }
+
+  // 2b. For each day, get the friends scoreboard (full rounds; only opens after you've played)
   let authOk = false;
   for (const c of challenges) {
     const r = await get(`/api/v3/results/highscores/${c.token}?friends=true&limit=26&minRounds=5`);

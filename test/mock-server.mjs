@@ -15,7 +15,9 @@ const mkPlayer = (id, nick, pts) => ({
 });
 
 const routes = {
-  "/api/v3/challenges/daily-challenges/today": { token: "TODAY", date: "2026-11-14T02:35:00Z" },
+  "/api/v3/challenges/daily-challenges/today": { token: "TODAY", date: "2026-11-14T02:35:00Z", friends: [
+    { id: "f1", nick: "KayakHome67", totalScore: 18802, totalTime: 631, totalDistance: 4846120.9, countryCode: "us" },
+    { id: "b2", nick: "driplessbeing", totalScore: 15000, totalTime: 400, totalDistance: 2000000, countryCode: "ie" } ] },
   "/api/v3/challenges/daily-challenges/previous": [
     { token: "D13", date: "2026-11-13T01:36:00Z" },
     { token: "D12", date: "2026-11-12T01:36:00Z" },
