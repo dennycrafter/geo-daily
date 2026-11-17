@@ -3,24 +3,7 @@
  "days": {
   "2026-11-17": {
    "token": "kg3OiieAf3aIaP2e",
-   "players": {
-    "6af8b31f19669ae9513c6e56": {
-     "nick": "KayakHome67",
-     "country": "us",
-     "total": 18802,
-     "time": 631,
-     "km": 4846.1,
-     "rounds": []
-    },
-    "60510ee60c30bf0001659a65": {
-     "nick": "Nathan Rusk",
-     "country": "nl",
-     "total": 16069,
-     "time": 525,
-     "km": 6812.7,
-     "rounds": []
-    }
-   }
+   "players": {}
   },
   "2026-11-16": {
    "token": "pJjKqlcyx6rYhyms",
