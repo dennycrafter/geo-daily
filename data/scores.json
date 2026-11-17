@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-17T18:53:54.217Z",
+ "updatedAt": "2026-11-17T22:43:06.754Z",
  "days": {
   "2026-11-17": {
    "token": "kg3OiieAf3aIaP2e",
@@ -230,6 +230,55 @@
        "lng": 121.2919,
        "km": 93.1,
        "time": 102,
+       "timedOut": false
+      }
+     ]
+    },
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 17085,
+     "time": 846,
+     "km": 3436.7,
+     "rounds": [
+      {
+       "points": 3490,
+       "lat": 55.1022,
+       "lng": 27.4659,
+       "km": 536.1,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 5000,
+       "lat": 51.8832,
+       "lng": -9.5919,
+       "km": 0,
+       "time": 155,
+       "timedOut": false
+      },
+      {
+       "points": 4441,
+       "lat": 11.2489,
+       "lng": 104.1624,
+       "km": 177,
+       "time": 155,
+       "timedOut": false
+      },
+      {
+       "points": 2613,
+       "lat": 47.8898,
+       "lng": 28.8209,
+       "km": 968,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 1541,
+       "lat": 27.0177,
+       "lng": 103.198,
+       "km": 1755.5,
+       "time": 180,
        "timedOut": false
       }
      ]
@@ -546,6 +595,55 @@
        "timedOut": false
       }
      ]
+    },
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 16764,
+     "time": 844,
+     "km": 4054.5,
+     "rounds": [
+      {
+       "points": 4698,
+       "lat": 9.3855,
+       "lng": -83.662,
+       "km": 92.8,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 994,
+       "lat": -12.538,
+       "lng": 13.7069,
+       "km": 2409.4,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 2347,
+       "lat": -24.2036,
+       "lng": 29.1373,
+       "km": 1128.1,
+       "time": 163,
+       "timedOut": false
+      },
+      {
+       "points": 3892,
+       "lat": 49.0035,
+       "lng": 12.1739,
+       "km": 373.6,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4833,
+       "lat": 47.9784,
+       "lng": 13.2558,
+       "km": 50.6,
+       "time": 141,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
@@ -678,6 +776,55 @@
        "timedOut": false
       }
      ]
+    },
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 14944,
+     "time": 895,
+     "km": 12870.5,
+     "rounds": [
+      {
+       "points": 4464,
+       "lat": -12.0353,
+       "lng": -75.211,
+       "km": 169,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4,
+       "lat": -33.4228,
+       "lng": -70.6645,
+       "km": 10572.6,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4032,
+       "lat": 26.763,
+       "lng": 77.5795,
+       "km": 320.9,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4937,
+       "lat": 22.2867,
+       "lng": 114.1409,
+       "km": 19,
+       "time": 175,
+       "timedOut": false
+      },
+      {
+       "points": 1507,
+       "lat": 42.8811,
+       "lng": 74.4887,
+       "km": 1789,
+       "time": 180,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
@@ -807,6 +954,55 @@
        "lng": -64.9756,
        "km": 588.5,
        "time": 143,
+       "timedOut": false
+      }
+     ]
+    },
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 17737,
+     "time": 867,
+     "km": 2946.9,
+     "rounds": [
+      {
+       "points": 3076,
+       "lat": 27.4971,
+       "lng": -99.5668,
+       "km": 724.8,
+       "time": 149,
+       "timedOut": false
+      },
+      {
+       "points": 1847,
+       "lat": 42.4994,
+       "lng": 23.8089,
+       "km": 1485.7,
+       "time": 178,
+       "timedOut": false
+      },
+      {
+       "points": 3848,
+       "lat": 38.028,
+       "lng": 40.4628,
+       "km": 390.6,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 3967,
+       "lat": 13.7971,
+       "lng": 100.5281,
+       "km": 345.3,
+       "time": 180,
+       "timedOut": false
+      },
+      {
+       "points": 4999,
+       "lat": -33.1315,
+       "lng": -64.3519,
+       "km": 0.4,
+       "time": 180,
        "timedOut": false
       }
      ]
@@ -1123,6 +1319,10 @@
   "6af8b31f19669ae9513c6e56": {
    "nick": "KayakHome67",
    "firstSeen": "2026-11-17"
+  },
+  "6aea3baaa471052e7d2233e1": {
+   "nick": "FrankyPanky",
+   "firstSeen": "2026-11-11"
   }
  }
 }
