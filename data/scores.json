@@ -1,6 +1,138 @@
 {
- "updatedAt": "2026-11-17T22:43:06.754Z",
+ "updatedAt": "2026-11-18T21:42:39.827Z",
  "days": {
+  "2026-11-18": {
+   "token": "sbnB6JJjaAoVQ0Oa",
+   "players": {
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 17223,
+     "time": 889,
+     "km": 3592.3,
+     "rounds": [
+      {
+       "points": 4540,
+       "lat": 51.818,
+       "lng": 5.8424,
+       "km": 144,
+       "time": 178,
+       "timedOut": false
+      },
+      {
+       "points": 3129,
+       "lat": 52.6727,
+       "lng": 19.1079,
+       "km": 699,
+       "time": 178,
+       "timedOut": false
+      },
+      {
+       "points": 1125,
+       "lat": 13.6609,
+       "lng": 100.9815,
+       "km": 2225.3,
+       "time": 175,
+       "timedOut": false
+      },
+      {
+       "points": 3803,
+       "lat": 42.5299,
+       "lng": 71.4914,
+       "km": 408.1,
+       "time": 179,
+       "timedOut": false
+      },
+      {
+       "points": 4626,
+       "lat": 17.36,
+       "lng": -99.4749,
+       "km": 116,
+       "time": 179,
+       "timedOut": false
+      }
+     ]
+    },
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 13431,
+     "time": 461,
+     "km": 9564,
+     "rounds": [
+      {
+       "points": 4785,
+       "lat": 52.5179,
+       "lng": 6.287,
+       "km": 65.7,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 4496,
+       "lat": 56.9631,
+       "lng": 24.1684,
+       "km": 158.5,
+       "time": 77,
+       "timedOut": false
+      },
+      {
+       "points": 994,
+       "lat": 16.5537,
+       "lng": 101.7295,
+       "km": 2409.8,
+       "time": 123,
+       "timedOut": false
+      },
+      {
+       "points": 3078,
+       "lat": 48.3718,
+       "lng": 80.4834,
+       "km": 723.6,
+       "time": 56,
+       "timedOut": false
+      },
+      {
+       "points": 78,
+       "lat": -12.6388,
+       "lng": -50.7812,
+       "km": 6206.4,
+       "time": 29,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "nl",
+     "lat": 52.8786,
+     "lng": 7.0592
+    },
+    {
+     "country": "lv",
+     "lat": 57.173,
+     "lng": 26.7621
+    },
+    {
+     "country": "lk",
+     "lat": 7.3014,
+     "lng": 81.6705
+    },
+    {
+     "country": "kg",
+     "lat": 42.502,
+     "lng": 76.4713
+    },
+    {
+     "country": "mx",
+     "lat": 17.4679,
+     "lng": -98.3876
+    }
+   ]
+  },
   "2026-11-17": {
    "token": "kg3OiieAf3aIaP2e",
    "players": {
