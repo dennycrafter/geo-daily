@@ -5,6 +5,8 @@
   "siteUrl": "https://geo-daily-ivory.vercel.app",
   "slack": {
     "scoresInPings": true,
+    "resultsPost": false,
+    "welcomes": false,
     "recapHour": 17,
     "timeZone": "America/Chicago"
   }

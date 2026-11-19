@@ -136,7 +136,7 @@ export async function notify({ before, after, now = new Date(), post, memberEven
   const latest = days[0];
   const msgs = [];
   const owner = cfg.ownerName || "Denis";
-  for (const e of memberEvents) {
+  for (const e of (sc.welcomes ? memberEvents : [])) { // welcome posts are off unless slack.welcomes is true
     const tag = e.nick && e.nick !== e.name ? ` (${e.nick} on GeoGuessr)` : "";
     if (e.type === "joined") msgs.push(`👋 *${e.name}*${tag} just joined Geo Daily! Their scores will show up here after their first daily. 🌍`);
     if (e.type === "requested") msgs.push(`👋 *${e.name}*${tag} signed up for Geo Daily. ${owner} sent them a GeoGuessr friend request, accept it to start showing up. 📨`);
@@ -171,7 +171,7 @@ export async function notify({ before, after, now = new Date(), post, memberEven
   const local = new Intl.DateTimeFormat("en-CA", { timeZone: sc.timeZone || "America/Chicago", year: "numeric", month: "2-digit", day: "2-digit", hour: "2-digit", hourCycle: "h23" }).formatToParts(now);
   const part = (t) => local.find((x) => x.type === t).value;
   const localDay = `${part("year")}-${part("month")}-${part("day")}`, localHour = +part("hour");
-  for (const d of days.slice(0, 3)) {
+  for (const d of (sc.resultsPost ? days.slice(0, 3) : [])) { // 5pm results post is off unless slack.resultsPost is true
     if (state.recapped.includes(d)) continue;
     const due = localDay > d || (localDay === d && localHour >= (sc.recapHour ?? 17));
     if (!due || (now - new Date(d + "T12:00:00Z")) / 864e5 > 3) continue;
