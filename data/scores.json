@@ -52,55 +52,6 @@
        "timedOut": false
       }
      ]
-    },
-    "69acf4f717013e56098412b8": {
-     "nick": "denis",
-     "country": "ie",
-     "total": 14519,
-     "time": 353,
-     "km": 6684.7,
-     "rounds": [
-      {
-       "points": 246,
-       "lat": 5.1256,
-       "lng": -74.163,
-       "km": 4490.7,
-       "time": 138,
-       "timedOut": false
-      },
-      {
-       "points": 3837,
-       "lat": 2.9939,
-       "lng": -73.0381,
-       "km": 394.8,
-       "time": 65,
-       "timedOut": false
-      },
-      {
-       "points": 2313,
-       "lat": 55.6982,
-       "lng": 8.9682,
-       "km": 1149.6,
-       "time": 75,
-       "timedOut": false
-      },
-      {
-       "points": 4628,
-       "lat": 36.7289,
-       "lng": 128.2013,
-       "km": 115.2,
-       "time": 41,
-       "timedOut": false
-      },
-      {
-       "points": 3495,
-       "lat": 52.733,
-       "lng": 6.5728,
-       "km": 534.3,
-       "time": 34,
-       "timedOut": false
-      }
-     ]
     }
    },
    "map": "World",
