@@ -160,9 +160,9 @@ export async function notify({ before, after, now = new Date(), post, memberEven
       const rounds = p.rounds || []; // no countries here: that would spoil the rounds for people who haven't played
       const left = known.filter((x) => !D.players[x]).map((x) => nameOf(x));
       const body = [`🎯 *${fmt(p.total)}*  ·  ⏱️ ${mmss(p.time)}`];
-      if (rounds.length) body.push(roundTable(rounds));
+      const card = rounds.length === 5 && site ? `${site.replace(/\/$/, "")}/api/card?r=${rounds.map((x) => Math.round(x.points)).join(",")}&t=${Math.round(p.total)}` : null;
       body.push(`_💬 ${quip(p.total, id + latest, (state.recentQuips ||= []))}_`);
-      msgs.push({ text: `🌍 *${name}* just finished the daily`, attachments: [{ color: "#1D9E75", text: body.join("\n"), mrkdwn_in: ["text"] }] });
+      msgs.push({ text: `🌍 *${name}* just finished the daily`, attachments: [{ color: "#1D9E75", text: body.join("\n"), mrkdwn_in: ["text"], ...(card ? { image_url: card, fallback: `Rounds: ${rounds.map((x) => fmt(x.points)).join(", ")}` } : {}) }] });
       state.pinged[latest] = [...new Set([...(state.pinged[latest] || []), id])];
     }
   }
