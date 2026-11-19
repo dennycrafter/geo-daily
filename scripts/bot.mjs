@@ -17,26 +17,28 @@ export async function botProfile(bot) {
 }
 
 // Play today's daily if the bot hasn't yet. Returns "already" | "played" | "failed: ...".
-export async function botPlay(bot, token, botId) {
-  const hasMe = (r) => r.status === 200 && (r.body?.items || []).some((i) => String(i?.game?.player?.id || "").toLowerCase() === botId);
-  const check = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=50`);
-  if (hasMe(check)) return "already";
+export async function botPlay(bot, token) {
+  // GeoGuessr's "my result for today": has a totalScore once the daily is finished
+  const done = async () => { const r = await bot.get("/api/v3/challenges/daily-challenges/me"); return r.status === 200 && typeof r.body?.totalScore === "number"; };
+  if (await done()) return "already";
 
   await bot.send("PUT", `/api/v3/challenges/daily-challenges/${token}/incognito`, { Incognito: true }); // stay off leaderboards
   const join = await bot.send("POST", `/api/v3/challenges/${token}`);
   const gameToken = join.body?.token || join.body?.game?.token;
   if (!gameToken) return `failed: join ${join.status} ${JSON.stringify(join.body).slice(0, 200)}`;
-  console.log(`Bot joined daily (join ${join.status})`);
 
+  let last = null;
   for (let i = 0; i < 7; i++) {
     const g = await bot.get(`/api/v3/games/${gameToken}?client=web`);
+    last = g.body;
     if (g.body?.state === "finished") break;
     const guess = await bot.send("POST", `/api/v3/games/${gameToken}`, { token: gameToken, lat: 0, lng: 0, timedOut: false, stepsCount: 0 });
-    if (guess.status >= 300) return `failed: guess ${guess.status} ${JSON.stringify(guess.body).slice(0, 160)}`;
+    if (guess.status >= 300) return `failed: guess ${guess.status} ${JSON.stringify(guess.body).slice(0, 200)}`;
+    last = guess.body;
     if (guess.body?.state === "finished") break;
   }
-  const after = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=50`);
-  return hasMe(after) ? "played" : `unsure: scoreboard ${after.status}, ${(after.body?.items || []).length} item(s)`;
+  if (await done()) return "played";
+  return `unsure: game state ${last?.state}, round ${last?.round}, guesses ${last?.player?.guesses?.length}`;
 }
 
 // Make the bot friends with everyone in the group: accept their requests, or send one (once).
@@ -53,7 +55,8 @@ export async function botFriends(bot, targetIds) {
     if (received.has(id)) { const r = await bot.send("PUT", `/api/v3/social/friends/${id}?context=`); if (r.status < 300) out.accepted++; continue; }
     if (st.requested[id]) continue;
     const r = await bot.send("POST", `/api/v3/social/friends/${id}?context=`);
-    if (r.status < 300) { st.requested[id] = new Date().toISOString(); out.sent++; } else console.log(`Bot could not send request to ${id}: ${r.status}`);
+    if (r.status < 300 || r.status === 400) { st.requested[id] = new Date().toISOString(); if (r.status < 300) out.sent++; } // 400 = already requested
+    else console.log(`Bot could not send request to ${id}: ${r.status}`);
   }
   if (JSON.stringify(st) !== before) await writeFile(FILE, JSON.stringify(st, null, 1) + "\n");
   return out;

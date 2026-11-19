@@ -46,6 +46,7 @@ http.createServer((req, res) => {
   // bot account flow (cookie "bot"): play today's daily, then the scoreboard opens
   const isBot = String(req.headers.cookie || "").includes("_ncfa=bot");
   const json = (code, obj) => { res.writeHead(code, { "content-type": "application/json" }); res.end(JSON.stringify(obj)); };
+  if (isBot && path === "/api/v3/challenges/daily-challenges/me") return state.played ? json(200, { totalScore: 0, isIncognito: true }) : json(404, {});
   if (isBot && path === "/api/v3/profiles") return json(200, { user: { id: "b0b0b0b0b0b0b0b0b0b0b0b0", nick: "GeoDailyBot" } });
   if (isBot && path === "/api/v3/challenges/TODAY" && req.method === "POST") { state.round = 0; return json(200, { token: "G1" }); }
   if (isBot && path === "/api/v3/games/G1" && req.method === "GET") return json(200, { state: state.round >= 5 ? "finished" : "started", round: state.round + 1 });

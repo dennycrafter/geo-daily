@@ -95,7 +95,7 @@ async function main() {
       const targets = [...Object.keys(data.players || {}), ...Object.keys(members), (String(cfg.ownerProfile || "").match(/[0-9a-f]{24}/i) || [])[0]].filter(Boolean).filter((x) => x !== botId);
       const f = await botFriends(bot, targets);
       console.log(`Bot ${me.nick}: ${f.friends} friends, accepted ${f.accepted}, sent ${f.sent} request(s)`);
-      if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token, botId)}`);
+      if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token)}`);
     } catch (e) { console.error("Bot step failed: " + (e.message || e)); }
   }
 

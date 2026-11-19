@@ -30,7 +30,8 @@ jobs:
         run: node scripts/fetch.mjs
       - name: Save if anything changed
         run: |
-          if git diff --quiet -- data/; then
+          git add data/
+          if git diff --cached --quiet; then
             echo "No new scores."
           else
             git config user.name "geo-daily bot"
