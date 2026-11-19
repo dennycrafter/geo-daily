@@ -56,7 +56,7 @@ export async function botFriends(bot, targetIds) {
     if (st.requested[id]) continue;
     const r = await bot.send("POST", `/api/v3/social/friends/${id}?context=`);
     if (r.status < 300 || r.status === 400) { st.requested[id] = new Date().toISOString(); if (r.status < 300) out.sent++; } // 400 = already requested
-    else console.log(`Bot could not send request to ${id}: ${r.status}`);
+    else { console.log(`Bot could not send request to ${id}: ${r.status}`); if (r.status === 429) break; } // too many: try again next run
   }
   if (JSON.stringify(st) !== before) await writeFile(FILE, JSON.stringify(st, null, 1) + "\n");
   return out;
