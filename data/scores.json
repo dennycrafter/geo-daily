@@ -1,6 +1,19 @@
 {
- "updatedAt": "2026-11-18T21:42:39.827Z",
+ "updatedAt": "2026-11-19T03:42:14.696Z",
  "days": {
+  "2026-11-19": {
+   "token": "KFvmkvhYoKD4pgoo",
+   "players": {
+    "6af8b31f19669ae9513c6e56": {
+     "nick": "KayakHome67",
+     "country": "us",
+     "total": 16625,
+     "time": 639,
+     "km": 3219,
+     "rounds": []
+    }
+   }
+  },
   "2026-11-18": {
    "token": "sbnB6JJjaAoVQ0Oa",
    "players": {
