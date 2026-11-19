@@ -38,7 +38,7 @@ export async function syncMembers({ get, send, siteUrl, joins: given }) {
     if (m.status === "friends") continue; // already done, never repeat
 
     if (friends.has(id)) {
-      if (m.status !== "friends") { m.status = "friends"; events.push({ type: "joined", id, name: m.name, nick: m.nick }); }
+      if (m.status !== "friends") { const was = m.status; m.status = "friends"; events.push({ type: "joined", id, name: m.name, nick: m.nick, afterRequest: was === "requested" }); }
       continue;
     }
     if (received.has(id)) {
