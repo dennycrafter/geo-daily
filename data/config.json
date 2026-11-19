@@ -6,7 +6,7 @@
   "slack": {
     "scoresInPings": true,
     "resultsPost": false,
-    "welcomes": false,
+    "welcomes": true,
     "recapHour": 17,
     "timeZone": "America/Chicago"
   }

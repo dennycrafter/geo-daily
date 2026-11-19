@@ -137,9 +137,7 @@ export async function notify({ before, after, now = new Date(), post, memberEven
   const msgs = [];
   const owner = cfg.ownerName || "Denis";
   for (const e of (sc.welcomes ? memberEvents : [])) { // welcome posts are off unless slack.welcomes is true
-    const tag = e.nick && e.nick !== e.name ? ` (${e.nick} on GeoGuessr)` : "";
-    if (e.type === "joined") msgs.push(`👋 *${e.name}*${tag} just joined Geo Daily! Their scores will show up here after their first daily. 🌍`);
-    if (e.type === "requested") msgs.push(`👋 *${e.name}*${tag} signed up for Geo Daily. ${owner} sent them a GeoGuessr friend request, accept it to start showing up. 📨`);
+    if (e.type === "joined") msgs.push(`👋 *${e.name}* joined Geo Daily`); // one short line, only once they're actually in
   }
   if (!latest) { for (const text of msgs) await post(text); return { msgs, state }; }
 
