@@ -11,7 +11,7 @@ const idsFrom = (arr) => (Array.isArray(arr) ? arr : arr?.items || arr?.requests
   .map((x) => String(x?.userId || x?.id || x?.user?.userId || x?.user?.id || x?.sender?.userId || x?.from?.userId || "").toLowerCase())
   .filter(Boolean);
 
-export async function syncMembers({ get, send, siteUrl, joins: given }) {
+export async function syncMembers({ get, send, siteUrl, joins: given, viaName = null }) {
   let members = {};
   try { members = JSON.parse(await readFile(FILE, "utf8")); } catch {}
   const before = JSON.stringify(members);
@@ -49,7 +49,7 @@ export async function syncMembers({ get, send, siteUrl, joins: given }) {
     }
     if (m.status === "new") {
       const r = await send("POST", `/api/v3/social/friends/${id}?context=`);
-      if (r.status < 300) { m.status = "requested"; m.requestedAt = new Date().toISOString(); events.push({ type: "requested", id, name: m.name, nick: m.nick }); }
+      if (r.status < 300) { m.status = "requested"; m.requestedAt = new Date().toISOString(); events.push({ type: "requested", id, name: m.name, nick: m.nick, via: viaName }); }
       else console.log(`Could not send friend request to ${id}: ${r.status}`);
     }
   }

@@ -25,6 +25,7 @@ jobs:
       - name: Pull scores
         env:
           GEO_NCFA: ${{ secrets.GEO_NCFA }}
+          GEO_BOT_NCFA: ${{ secrets.GEO_BOT_NCFA }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
         run: node scripts/fetch.mjs
       - name: Save if anything changed

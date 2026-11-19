@@ -29,6 +29,7 @@ const routes = {
 // friend features: aaaa... already a friend, bbbb... sent Denis a request, cccc... is brand new
 const A = "a".repeat(24), B = "b".repeat(24), C = "c".repeat(24);
 const calls = [];
+const state = { round: 0, played: false };
 routes["/api/v3/social/friends/summary"] = { friends: [{ userId: A, nick: "already_friend" }] };
 routes["/api/v3/social/friends/received"] = [{ userId: B, nick: "sent_me_one" }];
 routes[`/api/v3/users/${A}`] = { nick: "already_friend" };
@@ -40,9 +41,19 @@ routes["/__calls"] = calls;
 http.createServer((req, res) => {
   if (req.method !== "GET") calls.push(req.method + " " + req.url);
   if (req.url.startsWith("/api/join") || req.url.startsWith("/__calls")) { res.writeHead(200, { "content-type": "application/json" }); return res.end(JSON.stringify(routes[req.url.split("?")[0]])); }
-  if (!String(req.headers.cookie || "").includes("_ncfa=good")) { res.writeHead(401); return res.end(); }
+  if (!/_ncfa=(good|bot)/.test(String(req.headers.cookie || ""))) { res.writeHead(401); return res.end(); }
   const path = req.url.split("?")[0];
-  if (path === "/api/v3/results/highscores/TODAY") { res.writeHead(404); return res.end('{"message":"User hasn\'t played challenge yet."}'); }
+  // bot account flow (cookie "bot"): play today's daily, then the scoreboard opens
+  const isBot = String(req.headers.cookie || "").includes("_ncfa=bot");
+  const json = (code, obj) => { res.writeHead(code, { "content-type": "application/json" }); res.end(JSON.stringify(obj)); };
+  if (isBot && path === "/api/v3/profiles") return json(200, { user: { id: "b0b0b0b0b0b0b0b0b0b0b0b0", nick: "GeoDailyBot" } });
+  if (isBot && path === "/api/v3/challenges/TODAY" && req.method === "POST") { state.round = 0; return json(200, { token: "G1" }); }
+  if (isBot && path === "/api/v3/games/G1" && req.method === "GET") return json(200, { state: state.round >= 5 ? "finished" : "started", round: state.round + 1 });
+  if (isBot && path === "/api/v3/games/G1" && req.method === "POST") { state.round++; if (state.round >= 5) state.played = true; return json(200, { state: state.round >= 5 ? "finished" : "started" }); }
+  if (path === "/api/v3/results/highscores/TODAY") {
+    if (isBot && state.played) return json(200, { items: [mkPlayer("b0b0b0b0b0b0b0b0b0b0b0b0", "GeoDailyBot", [0,0,0,0,0]), mkPlayer("f1", "KayakHome67", [4345,4076,4199,3387,4635])] });
+    res.writeHead(404); return res.end('{"message":"User hasn\'t played challenge yet."}');
+  }
   if (req.method !== "GET" && path.startsWith("/api/v3/social/friends/")) { res.writeHead(200); return res.end(); }
   const body = routes[path];
   if (!body) { res.writeHead(404); return res.end(); }

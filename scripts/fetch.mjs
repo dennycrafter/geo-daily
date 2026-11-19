@@ -1,6 +1,6 @@
-// Pulls your GeoGuessr friends' daily challenge scores and saves them to data/scores.json.
-// Needs one secret: GEO_NCFA = the value of the "_ncfa" cookie from geoguessr.com while logged in.
-// Run: GEO_NCFA=xxxx node scripts/fetch.mjs
+// Pulls the group's GeoGuessr daily challenge scores and saves them to data/scores.json.
+// Secrets: GEO_BOT_NCFA (bot account's _ncfa cookie, preferred) and/or GEO_NCFA (Denis's).
+// Run: GEO_BOT_NCFA=xxxx node scripts/fetch.mjs
 
 import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { dirname, join } from "node:path";
@@ -11,34 +11,20 @@ import { syncMembers } from "./members.mjs";
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const OUT = join(ROOT, "data", "scores.json");
 const BASE = process.env.GEO_BASE_URL || "https://www.geoguessr.com";
-const COOKIE = (process.env.GEO_NCFA || "").trim();
+import { geoClient } from "./geo.mjs";
+import { botProfile, botPlay, botFriends } from "./bot.mjs";
 
-if (!COOKIE) {
-  console.error("Missing GEO_NCFA (your GeoGuessr _ncfa cookie). Nothing fetched.");
+// Two possible logins: the bot account (GEO_BOT_NCFA, preferred) and Denis's (GEO_NCFA, optional now).
+const MAIN = (process.env.GEO_NCFA || "").trim();
+const BOTC = (process.env.GEO_BOT_NCFA || "").trim();
+if (!MAIN && !BOTC) {
+  console.error("Missing GEO_BOT_NCFA / GEO_NCFA (GeoGuessr _ncfa cookies). Nothing fetched.");
   process.exit(1);
 }
-
-async function send(method, path) {
-  const res = await fetch(BASE + path, {
-    method,
-    headers: { cookie: `_ncfa=${COOKIE}`, accept: "application/json", "content-type": "application/json", "user-agent": "Mozilla/5.0 (geo-daily friends dashboard)" },
-  });
-  return { status: res.status };
-}
-
-async function get(path) {
-  const res = await fetch(BASE + path, {
-    headers: {
-      cookie: `_ncfa=${COOKIE}`,
-      accept: "application/json",
-      "user-agent": "Mozilla/5.0 (geo-daily friends dashboard)",
-    },
-  });
-  const text = await res.text();
-  let body = null;
-  try { body = text ? JSON.parse(text) : null; } catch { body = text; }
-  return { status: res.status, body };
-}
+const main_ = MAIN ? geoClient(MAIN) : null;
+const bot = BOTC ? geoClient(BOTC) : null;
+const primary = bot || main_;
+const { get, send } = primary;
 
 const km = (m) => Math.round((Number(m) || 0) / 100) / 10; // meters -> km, 1 decimal
 
@@ -72,6 +58,10 @@ function parseRounds(item) {
   }));
 }
 
+function require_members() { return require_text(join(ROOT, "data", "members.json")); }
+import { readFileSync } from "node:fs";
+function require_text(f) { return readFileSync(f, "utf8"); }
+
 async function main() {
   let data = { updatedAt: null, days: {}, players: {} };
   try { data = JSON.parse(await readFile(OUT, "utf8")); } catch {}
@@ -94,6 +84,27 @@ async function main() {
     .map((c) => ({ token: c.token, day: String(c.date || "").slice(0, 10) }))
     .filter((c) => c.day);
 
+  // 1b. The bot: make sure it's friends with everyone, and play today's daily so the rounds unlock
+  let botId = "";
+  let cfg = {}; try { cfg = JSON.parse(await readFile(join(ROOT, "data", "config.json"), "utf8")); } catch {}
+  if (bot) {
+    try {
+      const me = await botProfile(bot);
+      botId = me.id;
+      const members = (() => { try { return JSON.parse(require_members()); } catch { return {}; } })();
+      const targets = [...Object.keys(data.players || {}), ...Object.keys(members), (String(cfg.ownerProfile || "").match(/[0-9a-f]{24}/i) || [])[0]].filter(Boolean).filter((x) => x !== botId);
+      const f = await botFriends(bot, targets);
+      console.log(`Bot ${me.nick}: ${f.friends} friends, accepted ${f.accepted}, sent ${f.sent} request(s)`);
+      if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token)}`);
+    } catch (e) { console.error("Bot step failed: " + (e.message || e)); }
+  }
+
+  // Read from the bot first, then Denis's account, and merge (until everyone has accepted the bot)
+  const readers = [bot, main_].filter(Boolean);
+  let authOk = false;
+  for (const reader of readers) {
+  const today = await reader.get("/api/v3/challenges/daily-challenges/today");
+
   // 2a. Today's friends list: GeoGuessr gives every friend's total for today, even before you've played.
   //     No round-by-round here; those get filled in from the scoreboard below once you've played.
   const todayDay = today.status === 200 ? String(today.body?.date || "").slice(0, 10) : "";
@@ -101,7 +112,7 @@ async function main() {
     const day = (data.days[todayDay] ||= { token: today.body.token, players: {} });
     day.token = today.body.token;
     for (const f of today.body.friends) {
-      if (!f?.id || typeof f.totalScore !== "number") continue;
+      if (!f?.id || typeof f.totalScore !== "number" || String(f.id).toLowerCase() === botId) continue;
       const prev = day.players[f.id];
       if (prev?.rounds?.length) continue; // already have the full game
       day.players[f.id] = { nick: f.nick, country: (f.countryCode || "").toLowerCase(), total: f.totalScore, time: f.totalTime ?? 0, km: km(f.totalDistance), rounds: [] };
@@ -112,15 +123,14 @@ async function main() {
   }
 
   // 2b. For each day, get the friends scoreboard (full rounds; only opens after you've played)
-  let authOk = false;
   for (const c of challenges) {
-    const r = await get(`/api/v3/results/highscores/${c.token}?friends=true&limit=26&minRounds=5`);
+    const r = await reader.get(`/api/v3/results/highscores/${c.token}?friends=true&limit=50&minRounds=5`);
     if (r.status === 401) throw new Error("Cookie rejected on scoreboard. Grab a fresh _ncfa cookie.");
     if (r.status === 404) { console.log(`${c.day}: locked (you haven't played it yet)`); continue; }
     if (r.status !== 200 || !Array.isArray(r.body?.items)) { console.log(`${c.day}: skipped (status ${r.status})`); continue; }
     authOk = true;
 
-    const items = r.body.items.filter((i) => i?.game?.player?.id);
+    const items = r.body.items.filter((i) => i?.game?.player?.id && String(i.game.player.id).toLowerCase() !== botId);
     if (!items.length) continue;
 
     const day = (data.days[c.day] ||= { token: c.token, players: {} });
@@ -141,6 +151,7 @@ async function main() {
     console.log(`${c.day}: ${items.length} player(s)`);
   }
 
+  } // end readers
   if (!authOk) console.log("No unlocked days this run (play today's daily to unlock the friends scoreboard).");
 
   const after = JSON.stringify({ d: data.days, p: data.players });
@@ -149,8 +160,7 @@ async function main() {
   const hook = (process.env.SLACK_WEBHOOK_URL || "").trim();
   let memberEvents = [];
   try {
-    let cfg = {}; try { cfg = JSON.parse(await readFile(join(ROOT, "data", "config.json"), "utf8")); } catch {}
-    const r = await syncMembers({ get, send, siteUrl: process.env.GEO_SITE_URL || cfg.siteUrl });
+    const r = await syncMembers({ get: primary.get, send: (m, p) => primary.send(m, p), siteUrl: process.env.GEO_SITE_URL || cfg.siteUrl, viaName: bot ? "GeoDailyBot" : null });
     memberEvents = r.events;
     for (const e of memberEvents) console.log(`Member ${e.type}: ${e.name}`);
   } catch (e) { console.error("Member sync failed: " + (e.message || e)); }
