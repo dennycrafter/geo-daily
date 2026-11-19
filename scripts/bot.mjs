@@ -17,14 +17,16 @@ export async function botProfile(bot) {
 }
 
 // Play today's daily if the bot hasn't yet. Returns "already" | "played" | "failed: ...".
-export async function botPlay(bot, token) {
-  const check = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=1&minRounds=5`);
-  if (check.status === 200) return "already";
+export async function botPlay(bot, token, botId) {
+  const hasMe = (r) => r.status === 200 && (r.body?.items || []).some((i) => String(i?.game?.player?.id || "").toLowerCase() === botId);
+  const check = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=50`);
+  if (hasMe(check)) return "already";
 
   await bot.send("PUT", `/api/v3/challenges/daily-challenges/${token}/incognito`, { Incognito: true }); // stay off leaderboards
   const join = await bot.send("POST", `/api/v3/challenges/${token}`);
   const gameToken = join.body?.token || join.body?.game?.token;
-  if (!gameToken) return `failed: join ${join.status} ${JSON.stringify(join.body).slice(0, 160)}`;
+  if (!gameToken) return `failed: join ${join.status} ${JSON.stringify(join.body).slice(0, 200)}`;
+  console.log(`Bot joined daily (join ${join.status})`);
 
   for (let i = 0; i < 7; i++) {
     const g = await bot.get(`/api/v3/games/${gameToken}?client=web`);
@@ -33,8 +35,8 @@ export async function botPlay(bot, token) {
     if (guess.status >= 300) return `failed: guess ${guess.status} ${JSON.stringify(guess.body).slice(0, 160)}`;
     if (guess.body?.state === "finished") break;
   }
-  const after = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=1&minRounds=5`);
-  return after.status === 200 ? "played" : `failed: scoreboard still ${after.status}`;
+  const after = await bot.get(`/api/v3/results/highscores/${token}?friends=true&limit=50`);
+  return hasMe(after) ? "played" : `unsure: scoreboard ${after.status}, ${(after.body?.items || []).length} item(s)`;
 }
 
 // Make the bot friends with everyone in the group: accept their requests, or send one (once).

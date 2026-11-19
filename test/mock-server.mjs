@@ -51,6 +51,7 @@ http.createServer((req, res) => {
   if (isBot && path === "/api/v3/games/G1" && req.method === "GET") return json(200, { state: state.round >= 5 ? "finished" : "started", round: state.round + 1 });
   if (isBot && path === "/api/v3/games/G1" && req.method === "POST") { state.round++; if (state.round >= 5) state.played = true; return json(200, { state: state.round >= 5 ? "finished" : "started" }); }
   if (path === "/api/v3/results/highscores/TODAY") {
+    if (isBot && !state.played) return json(200, { items: [] });
     if (isBot && state.played) return json(200, { items: [mkPlayer("b0b0b0b0b0b0b0b0b0b0b0b0", "GeoDailyBot", [0,0,0,0,0]), mkPlayer("f1", "KayakHome67", [4345,4076,4199,3387,4635])] });
     res.writeHead(404); return res.end('{"message":"User hasn\'t played challenge yet."}');
   }

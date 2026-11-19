@@ -85,17 +85,17 @@ async function main() {
     .filter((c) => c.day);
 
   // 1b. The bot: make sure it's friends with everyone, and play today's daily so the rounds unlock
-  let botId = "";
+  let botId = "", botNick = "";
   let cfg = {}; try { cfg = JSON.parse(await readFile(join(ROOT, "data", "config.json"), "utf8")); } catch {}
   if (bot) {
     try {
       const me = await botProfile(bot);
-      botId = me.id;
+      botId = me.id; botNick = me.nick;
       const members = (() => { try { return JSON.parse(require_members()); } catch { return {}; } })();
       const targets = [...Object.keys(data.players || {}), ...Object.keys(members), (String(cfg.ownerProfile || "").match(/[0-9a-f]{24}/i) || [])[0]].filter(Boolean).filter((x) => x !== botId);
       const f = await botFriends(bot, targets);
       console.log(`Bot ${me.nick}: ${f.friends} friends, accepted ${f.accepted}, sent ${f.sent} request(s)`);
-      if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token)}`);
+      if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token, botId)}`);
     } catch (e) { console.error("Bot step failed: " + (e.message || e)); }
   }
 
@@ -160,7 +160,7 @@ async function main() {
   const hook = (process.env.SLACK_WEBHOOK_URL || "").trim();
   let memberEvents = [];
   try {
-    const r = await syncMembers({ get: primary.get, send: (m, p) => primary.send(m, p), siteUrl: process.env.GEO_SITE_URL || cfg.siteUrl, viaName: bot ? "GeoDailyBot" : null });
+    const r = await syncMembers({ get: primary.get, send: (m, p) => primary.send(m, p), siteUrl: process.env.GEO_SITE_URL || cfg.siteUrl, viaName: bot ? botNick : null });
     memberEvents = r.events;
     for (const e of memberEvents) console.log(`Member ${e.type}: ${e.name}`);
   } catch (e) { console.error("Member sync failed: " + (e.message || e)); }
