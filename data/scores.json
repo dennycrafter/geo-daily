@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-20T21:30:18.604Z",
+ "updatedAt": "2026-11-20T21:50:17.263Z",
  "days": {
   "2026-11-20": {
    "token": "sFz245o40vxhysK7",
@@ -98,6 +98,55 @@
        "lng": -49.5385,
        "km": 3464.8,
        "time": 100,
+       "timedOut": false
+      }
+     ]
+    },
+    "6adb74735935729b69a67074": {
+     "nick": "EnchantingMeadow874",
+     "country": "us",
+     "total": 14568,
+     "time": 544,
+     "km": 6604.1,
+     "rounds": [
+      {
+       "points": 276,
+       "lat": 2.3165,
+       "lng": 38.0572,
+       "km": 4323.3,
+       "time": 164,
+       "timedOut": false
+      },
+      {
+       "points": 3118,
+       "lat": 60.4565,
+       "lng": 25.0951,
+       "km": 704.5,
+       "time": 148,
+       "timedOut": false
+      },
+      {
+       "points": 2127,
+       "lat": 29.9089,
+       "lng": 77.506,
+       "km": 1275.2,
+       "time": 89,
+       "timedOut": false
+      },
+      {
+       "points": 4350,
+       "lat": 40.2438,
+       "lng": -8.4255,
+       "km": 207.9,
+       "time": 89,
+       "timedOut": false
+      },
+      {
+       "points": 4697,
+       "lat": -9.1752,
+       "lng": -78.2019,
+       "km": 93.1,
+       "time": 54,
        "timedOut": false
       }
      ]
@@ -1719,6 +1768,10 @@
   "6aea3baaa471052e7d2233e1": {
    "nick": "FrankyPanky",
    "firstSeen": "2026-11-11"
+  },
+  "6adb74735935729b69a67074": {
+   "nick": "EnchantingMeadow874",
+   "firstSeen": "2026-11-20"
   }
  }
 }
