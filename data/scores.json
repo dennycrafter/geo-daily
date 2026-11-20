@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-20T00:30:19.481Z",
+ "updatedAt": "2026-11-20T21:30:18.604Z",
  "days": {
   "2026-11-20": {
    "token": "sFz245o40vxhysK7",
@@ -49,6 +49,55 @@
        "lng": -58.477,
        "km": 3703.8,
        "time": 173,
+       "timedOut": false
+      }
+     ]
+    },
+    "69acf4f717013e56098412b8": {
+     "nick": "denis",
+     "country": "ie",
+     "total": 14241,
+     "time": 643,
+     "km": 6056.1,
+     "rounds": [
+      {
+       "points": 4298,
+       "lat": 6.5709,
+       "lng": -0.9479,
+       "km": 225.6,
+       "time": 171,
+       "timedOut": false
+      },
+      {
+       "points": 2123,
+       "lat": 56.3114,
+       "lng": 13.829,
+       "km": 1277.7,
+       "time": 179,
+       "timedOut": false
+      },
+      {
+       "points": 2491,
+       "lat": 27.7447,
+       "lng": 79.447,
+       "km": 1039.1,
+       "time": 81,
+       "timedOut": false
+      },
+      {
+       "points": 4839,
+       "lat": 38.4358,
+       "lng": -7.9398,
+       "km": 48.9,
+       "time": 112,
+       "timedOut": false
+      },
+      {
+       "points": 490,
+       "lat": -24.4468,
+       "lng": -49.5385,
+       "km": 3464.8,
+       "time": 100,
        "timedOut": false
       }
      ]
