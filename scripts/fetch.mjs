@@ -92,7 +92,8 @@ async function main() {
       const me = await botProfile(bot);
       botId = me.id; botNick = me.nick;
       const members = (() => { try { return JSON.parse(require_members()); } catch { return {}; } })();
-      const targets = [...Object.keys(data.players || {}), ...Object.keys(members), (String(cfg.ownerProfile || "").match(/[0-9a-f]{24}/i) || [])[0]].filter(Boolean).filter((x) => x !== botId);
+      // brand-new sign-ups are left to the member step, which posts their "accept the request" message
+      const targets = [...Object.keys(data.players || {}), ...Object.keys(members).filter((id) => members[id]?.status !== "new"), (String(cfg.ownerProfile || "").match(/[0-9a-f]{24}/i) || [])[0]].filter(Boolean).filter((x) => x !== botId);
       const f = await botFriends(bot, targets);
       console.log(`Bot ${me.nick}: ${f.friends} friends, accepted ${f.accepted}, sent ${f.sent} request(s)`);
       if (today.status === 200 && today.body?.token) console.log(`Bot daily: ${await botPlay(bot, today.body.token)}`);

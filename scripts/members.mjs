@@ -49,8 +49,9 @@ export async function syncMembers({ get, send, siteUrl, joins: given, viaName = 
     }
     if (m.status === "new") {
       const r = await send("POST", `/api/v3/social/friends/${id}?context=`);
-      if (r.status < 300) { m.status = "requested"; m.requestedAt = new Date().toISOString(); events.push({ type: "requested", id, name: m.name, nick: m.nick, via: viaName }); }
-      else console.log(`Could not send friend request to ${id}: ${r.status}`);
+      // 400 = a request is already waiting for them; either way, tell them (once) to accept it
+      if (r.status < 300 || r.status === 400) { m.status = "requested"; m.requestedAt = new Date().toISOString(); events.push({ type: "requested", id, name: m.name, nick: m.nick, via: viaName }); }
+      else console.log(`Could not send friend request to ${id}: ${r.status} (will retry next run)`);
     }
   }
 
