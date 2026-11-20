@@ -1,9 +1,88 @@
 {
- "updatedAt": "2026-11-20T00:05:16.917Z",
+ "updatedAt": "2026-11-20T00:30:19.481Z",
  "days": {
   "2026-11-20": {
    "token": "sFz245o40vxhysK7",
-   "players": {}
+   "players": {
+    "6af8b31f19669ae9513c6e56": {
+     "nick": "KayakHome67",
+     "country": "us",
+     "total": 3867,
+     "time": 863,
+     "km": 16027.9,
+     "rounds": [
+      {
+       "points": 235,
+       "lat": -19.152,
+       "lng": 30.1397,
+       "km": 4558.5,
+       "time": 177,
+       "timedOut": false
+      },
+      {
+       "points": 1206,
+       "lat": 48.1487,
+       "lng": 15.942,
+       "km": 2121.8,
+       "time": 172,
+       "timedOut": false
+      },
+      {
+       "points": 341,
+       "lat": 22.4017,
+       "lng": 50.316,
+       "km": 4005.9,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 1668,
+       "lat": 44.9917,
+       "lng": 9.19,
+       "km": 1637.9,
+       "time": 165,
+       "timedOut": false
+      },
+      {
+       "points": 417,
+       "lat": -36.9793,
+       "lng": -58.477,
+       "km": 3703.8,
+       "time": 173,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "gh",
+     "lat": 8.5551,
+     "lng": -0.5197
+    },
+    {
+     "country": "fi",
+     "lat": 66.7731,
+     "lng": 23.9703
+    },
+    {
+     "country": "bd",
+     "lat": 26.1024,
+     "lng": 89.7681
+    },
+    {
+     "country": "pt",
+     "lat": 38.3749,
+     "lng": -8.4953
+    },
+    {
+     "country": "pe",
+     "lat": -8.5558,
+     "lng": -77.6313
+    }
+   ]
   },
   "2026-11-19": {
    "token": "KFvmkvhYoKD4pgoo",
