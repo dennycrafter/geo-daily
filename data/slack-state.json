@@ -1,8 +1,5 @@
 {
  "pinged": {
-  "2026-11-13": [
-   "69acf4f717013e56098412b8"
-  ],
   "2026-11-14": [
    "69acf4f717013e56098412b8",
    "6af366fa8e3f638e97e5afef"
@@ -27,6 +24,9 @@
    "6af8b31f19669ae9513c6e56",
    "69acf4f717013e56098412b8",
    "6adb74735935729b69a67074"
+  ],
+  "2026-11-23": [
+   "6aea3baaa471052e7d2233e1"
   ]
  },
  "recapped": [
@@ -54,6 +54,7 @@
   "Every pin a little adventure.",
   "Did the cat walk on the keyboard?",
   "Somebody blindfolded you at round two, right?",
-  "Points were scored. Not many, but some."
+  "Points were scored. Not many, but some.",
+  "You were close enough to wave at the right answer."
  ]
 }

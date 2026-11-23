@@ -1,9 +1,88 @@
 {
- "updatedAt": "2026-11-23T00:10:18.150Z",
+ "updatedAt": "2026-11-23T18:45:16.601Z",
  "days": {
   "2026-11-23": {
    "token": "dIo0oXpvFqjZMiJ2",
-   "players": {}
+   "players": {
+    "6aea3baaa471052e7d2233e1": {
+     "nick": "FrankyPanky",
+     "country": "us",
+     "total": 18275,
+     "time": 754,
+     "km": 19082.9,
+     "rounds": [
+      {
+       "points": 4970,
+       "lat": 45.548,
+       "lng": 10.2148,
+       "km": 9,
+       "time": 123,
+       "timedOut": false
+      },
+      {
+       "points": 4997,
+       "lat": 48.8019,
+       "lng": 9.0384,
+       "km": 0.9,
+       "time": 139,
+       "timedOut": false
+      },
+      {
+       "points": 4951,
+       "lat": 36.0164,
+       "lng": -78.8655,
+       "km": 14.8,
+       "time": 176,
+       "timedOut": false
+      },
+      {
+       "points": 3357,
+       "lat": 49.7167,
+       "lng": 19.1336,
+       "km": 594.2,
+       "time": 137,
+       "timedOut": false
+      },
+      {
+       "points": 0,
+       "lat": 18.0427,
+       "lng": -66.646,
+       "km": 18464,
+       "time": 180,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "it",
+     "lat": 45.5125,
+     "lng": 10.3181
+    },
+    {
+     "country": "de",
+     "lat": 48.8096,
+     "lng": 9.0338
+    },
+    {
+     "country": "us",
+     "lat": 35.9074,
+     "lng": -78.9604
+    },
+    {
+     "country": "ba",
+     "lat": 44.4198,
+     "lng": 18.0949
+    },
+    {
+     "country": "au",
+     "lat": -31.8069,
+     "lng": 115.8608
+    }
+   ]
   },
   "2026-11-22": {
    "token": "JNxczqTF7m6dBgP7",
