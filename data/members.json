@@ -46,5 +46,12 @@
   "status": "friends",
   "joinedAt": "2026-11-19T20:51:52.401Z",
   "nick": "EnchantingMeadow874"
+ },
+ "6ae4bddbc37fc57199714d4e": {
+  "name": "Cam",
+  "status": "requested",
+  "joinedAt": "2026-11-23T17:26:37.706Z",
+  "nick": "SeaShorey77",
+  "requestedAt": "2026-11-23T17:30:16.468Z"
  }
 }
