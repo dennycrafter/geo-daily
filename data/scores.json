@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T11:35:13.418Z",
+ "updatedAt": "2026-11-25T23:00:21.183Z",
  "days": {
   "2026-11-25": {
    "token": "a2hNqugN6ojARawn",
@@ -60,6 +60,55 @@
      "time": 486,
      "km": 10042.8,
      "rounds": []
+    },
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 15875,
+     "time": 546,
+     "km": 5629.2,
+     "rounds": [
+      {
+       "points": 4600,
+       "lat": 52.2426,
+       "lng": 19.352,
+       "km": 124.3,
+       "time": 103,
+       "timedOut": false
+      },
+      {
+       "points": 4235,
+       "lat": 59.3553,
+       "lng": 14.3336,
+       "km": 247.8,
+       "time": 136,
+       "timedOut": false
+      },
+      {
+       "points": 4700,
+       "lat": 50.1374,
+       "lng": 15.1508,
+       "km": 92.2,
+       "time": 87,
+       "timedOut": false
+      },
+      {
+       "points": 405,
+       "lat": -9.3765,
+       "lng": -39.0809,
+       "km": 3748.5,
+       "time": 164,
+       "timedOut": false
+      },
+      {
+       "points": 1935,
+       "lat": 53.2688,
+       "lng": 39.1631,
+       "km": 1416.5,
+       "time": 55,
+       "timedOut": false
+      }
+     ]
     }
    },
    "map": "World",
