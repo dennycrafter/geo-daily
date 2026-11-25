@@ -1,8 +1,5 @@
 {
  "pinged": {
-  "2026-11-16": [
-   "69acf4f717013e56098412b8"
-  ],
   "2026-11-17": [
    "60510ee60c30bf0001659a65",
    "6af8b31f19669ae9513c6e56",
@@ -27,6 +24,9 @@
   "2026-11-24": [
    "69acf4f717013e56098412b8",
    "60510ee60c30bf0001659a65",
+   "6ae4bddbc37fc57199714d4e"
+  ],
+  "2026-11-25": [
    "6ae4bddbc37fc57199714d4e"
   ]
  },
@@ -59,6 +59,7 @@
   "You were close enough to wave at the right answer.",
   "Lost. Possibly still lost.",
   "The compass was upside down, wasn't it?",
-  "Tomorrow is a new map."
+  "Tomorrow is a new map.",
+  "Not ideal, but the Street View car tried its best too."
  ]
 }
