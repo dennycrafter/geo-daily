@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-11-25T03:20:15.550Z",
+ "updatedAt": "2026-11-25T11:35:13.418Z",
  "days": {
   "2026-11-25": {
    "token": "a2hNqugN6ojARawn",
@@ -52,6 +52,14 @@
        "timedOut": false
       }
      ]
+    },
+    "673b2eff6767b85ea0270bbd": {
+     "nick": "LivelyReef940",
+     "country": "ie",
+     "total": 18073,
+     "time": 486,
+     "km": 10042.8,
+     "rounds": []
     }
    },
    "map": "World",
@@ -2131,6 +2139,10 @@
   "6ae4bddbc37fc57199714d4e": {
    "nick": "SeaShorey77",
    "firstSeen": "2026-11-24"
+  },
+  "673b2eff6767b85ea0270bbd": {
+   "nick": "LivelyReef940",
+   "firstSeen": "2026-11-25"
   }
  }
 }
