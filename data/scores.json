@@ -1,9 +1,88 @@
 {
- "updatedAt": "2026-11-26T00:05:18.455Z",
+ "updatedAt": "2026-11-26T23:55:14.930Z",
  "days": {
   "2026-11-26": {
    "token": "9VFz11kzhWASAWeg",
-   "players": {}
+   "players": {
+    "60510ee60c30bf0001659a65": {
+     "nick": "Nathan Rusk",
+     "country": "nl",
+     "total": 17705,
+     "time": 577,
+     "km": 3702.8,
+     "rounds": [
+      {
+       "points": 901,
+       "lat": -10.7681,
+       "lng": -74.4153,
+       "km": 2556.6,
+       "time": 116,
+       "timedOut": false
+      },
+      {
+       "points": 4782,
+       "lat": 22.3312,
+       "lng": 114.1758,
+       "km": 66.4,
+       "time": 126,
+       "timedOut": false
+      },
+      {
+       "points": 4138,
+       "lat": 40.5904,
+       "lng": 22.4402,
+       "km": 282.4,
+       "time": 99,
+       "timedOut": false
+      },
+      {
+       "points": 4885,
+       "lat": 53.3659,
+       "lng": -7.6474,
+       "km": 34.7,
+       "time": 118,
+       "timedOut": false
+      },
+      {
+       "points": 2999,
+       "lat": -4.3104,
+       "lng": -47.4974,
+       "km": 762.7,
+       "time": 117,
+       "timedOut": false
+      }
+     ]
+    }
+   },
+   "map": "World",
+   "timeLimit": 180,
+   "rounds": [
+    {
+     "country": "cr",
+     "lat": 9.9109,
+     "lng": -84.5217
+    },
+    {
+     "country": "mo",
+     "lat": 22.1567,
+     "lng": 113.5591
+    },
+    {
+     "country": "gr",
+     "lat": 38.1453,
+     "lng": 21.5513
+    },
+    {
+     "country": "ie",
+     "lat": 53.0978,
+     "lng": -7.9141
+    },
+    {
+     "country": "br",
+     "lat": -5.174,
+     "lng": -40.6695
+    }
+   ]
   },
   "2026-11-25": {
    "token": "a2hNqugN6ojARawn",
